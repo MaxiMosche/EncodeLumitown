@@ -25,7 +25,7 @@ function App() {
           <Route path="/homewiki" element={<HomeWiki />} />
           <Route path="/essence" element={<WikiEssence />} />
           <Route path="/consumable" element={<Wikiconsumable />} />
-          {/* <Route path="/map" element={<MapComponent />} /> */}
+           <Route path="/map" element={<MapComponent />} /> 
           <Route path="/lumitow-info" element={<LumitowInfo />} /> {/* Nueva ruta para LumitowInfo */}
         </Routes>
       </Topbar>
