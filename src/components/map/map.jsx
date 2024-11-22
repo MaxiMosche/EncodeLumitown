@@ -59,7 +59,6 @@ const Map = () => {
         const bounds = L.latLngBounds(southWest, northEast);
 ;
 
-        L.imageOverlay('https://res.cloudinary.com/dm94dpmzy/image/upload/v1732258661/Fondo_mapa_mg5xlr.webp', bounds).addTo(map)
         L.imageOverlay('https://res.cloudinary.com/dm94dpmzy/image/upload/v1732257677/MAPA_CBT2_sin_agua_xjf0of.webp', bounds).addTo(map);
         map.fitBounds(bounds);
         map.setMaxBounds(bounds);
@@ -130,7 +129,7 @@ const Map = () => {
                     background-color: black; /* Cambia el color de fondo a negro */
                 }
                 #map{
-                background-color: red;
+                background-color: #01335d; /*Cambia fondo del mapa*/
                 }
                 `}
             </style>
