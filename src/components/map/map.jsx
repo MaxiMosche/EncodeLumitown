@@ -50,7 +50,7 @@ const Map = () => {
         const map = L.map('map', {
             crs: L.CRS.Simple,
             maxBoundsViscosity: 1.0,
-            minZoom: -2,
+            minZoom: -1,
             maxZoom: 5,
         });
 
@@ -59,6 +59,7 @@ const Map = () => {
         const bounds = L.latLngBounds(southWest, northEast);
 
         L.imageOverlay('https://res.cloudinary.com/dm94dpmzy/image/upload/v1732257677/MAPA_CBT2_sin_agua_xjf0of.webp', bounds).addTo(map);
+        L.imageOverlay('https://res.cloudinary.com/dm94dpmzy/image/upload/v1732258112/Fondo_mapa_z1hqt2.webp', bounds).addTo(map);
         map.fitBounds(bounds);
         map.setMaxBounds(bounds);
 
