@@ -129,6 +129,9 @@ const Map = () => {
                 .leaflet-popup-tip{
                     background-color: black; /* Cambia el color de fondo a negro */
                 }
+                #map{
+                background-color: red;
+                }
                 `}
             </style>
         </div>
