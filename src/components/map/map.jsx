@@ -50,7 +50,7 @@ const Map = () => {
         const map = L.map('map', {
             crs: L.CRS.Simple,
             maxBoundsViscosity: 1.0,
-            minZoom: 0.3,
+            minZoom: 5,
             maxZoom: 5,
         });
 
