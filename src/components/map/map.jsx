@@ -51,7 +51,7 @@ const Map = () => {
             crs: L.CRS.Simple,
             maxBoundsViscosity: 1.0,
             minZoom: 0.3,
-            maxZoom: 3,
+            maxZoom: 5,
         });
 
         const southWest = L.latLng(0, 0);
