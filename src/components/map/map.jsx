@@ -58,7 +58,7 @@ const Map = () => {
         const northEast = L.latLng(1000, 1000);
         const bounds = L.latLngBounds(southWest, northEast);
 
-        L.imageOverlay('https://i.imgur.com/lreU4he.jpeg', bounds).addTo(map);
+        L.imageOverlay('https://res.cloudinary.com/dm94dpmzy/image/upload/v1732256277/MAPA_CBT_2_qe6n8d.webp', bounds).addTo(map);
         map.fitBounds(bounds);
         map.setMaxBounds(bounds);
 
