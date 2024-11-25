@@ -21,6 +21,7 @@
     "@sky-mavis/mavis-market-core": "^0.0.3",
     "@vercel/analytics": "^1.4.0",
     "chart.js": "^4.4.6",
+    "crypto-js": "^4.2.0",
     "http-proxy-middleware": "^3.0.0",
     "leaflet": "^1.9.4",
     "lightweight-charts": "^4.2.1",

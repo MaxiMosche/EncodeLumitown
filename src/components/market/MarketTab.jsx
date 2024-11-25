@@ -36,7 +36,7 @@ const MarketTab = () => {
 
     const filteredCriteria = selectedCriteria.filter((filter) => filter.values.length > 0);
 
-    fetch('https://www.lumitown.somee.com/FilterMarket', {
+    fetch('https://lumitownserver.somee.com/FilterMarket', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

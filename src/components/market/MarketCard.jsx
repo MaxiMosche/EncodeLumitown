@@ -24,9 +24,9 @@ const MarketCard = () => {
     // Change the background and background image of the body
     document.body.style.backgroundColor = '#6b94b2'; // Change background color to white
     document.body.style.backgroundImage = ''; // Remove background image if necessary
-    document.body.style.backgroundSize = 'cover'; // Ensure the image covers the entire screen
+    document.body.style.backgroundSize = 'cover'; // https://lumitownserver.somee.com/ Ensure the image covers the entire screen
     // Load the data from the collection initially
-    fetch('https://www.lumitown.somee.com/PresentationCollection')
+    fetch('https://lumitownserver.somee.com/PresentationCollection')
       .then((response) => response.json())
       .then((data) => setData(data));
 

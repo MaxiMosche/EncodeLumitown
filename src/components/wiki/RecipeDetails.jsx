@@ -1,5 +1,5 @@
-import zIndex from '@mui/material/styles/zIndex';
 import React, { useState, useEffect } from 'react';
+import OptionsCard from './OptionsCard'; // Import the new OptionsCard component
 
 const rarityColors = [
   '#ffffff', // Common
@@ -13,10 +13,10 @@ const RecipeDetails = ({ selectedRecipe, closeDetails, urls, imageCSS, hoverColo
   const [activeTab, setActiveTab] = useState('craftings');
   const [selectedCard, setSelectedCard] = useState(null);
   const [tooltip, setTooltip] = useState('');
-  const [isVisible, setIsVisible] = useState(false); // Para activar la animación de entrada
+  const [isVisible, setIsVisible] = useState(false);
 
   const normalizeName = (name) => name?.trim().toLowerCase().replace(/\s+/g, '') || '';
-  const capitalizeWords = (text) => text.split(' ').map(word => word.charAt(0).trim().toUpperCase() + word.slice(1)).join(' ');
+  const capitalizeWords = (text) => text.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
   const findImageForElement = (elementName, tier) => {
     if (!elementName) return null;
@@ -31,43 +31,18 @@ const RecipeDetails = ({ selectedRecipe, closeDetails, urls, imageCSS, hoverColo
   };
 
   const renderCards = (itemImage) => {
-    const rarityNames = selectedRecipe.rarity || ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary'];
-
+    const rarityNames = selectedRecipe.rarity; // The rarity names directly from selectedRecipe
     return (
       <div style={styles.cardsContainer}>
-        {rarityColors.slice(0, rarityNames.length).map((color, index) => (
+        {rarityNames.map((rarity, index) => (
           <div 
             key={index} 
-            style={{ ...styles.card, backgroundColor: `${color}50` }} 
+            style={{ ...styles.card, backgroundColor: `${rarityColors[index]}50` }} 
             onClick={() => handleCardClick(index)}
           >
             <img src={itemImage} alt={selectedRecipe.result} style={styles.cardImage} />
           </div>
         ))}
-      </div>
-    );
-  };
-
-  const renderOptionsCard = () => {
-    if (selectedCard === null) return null;
-
-    const rarityNames = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary'];
-    const options = ['Coming soon!'];
-    const ranges = [];
-
-    return (
-      <div style={styles.optionsCard}>
-       <h4 style={{ marginTop: '0px'}}>Options for {selectedRecipe.result}:</h4>
-        <div style={{ ...styles.rarityBox, backgroundColor: rarityColors[selectedCard] }}>
-          <span style={styles.rarityText}>{rarityNames[selectedCard].trim().toUpperCase()}</span>
-        </div>
-        <ul style={styles.optionList}>
-          {options.map((option, index) => (
-            <li key={index}>
-              <span>{option}: {ranges[selectedCard]}</span>
-            </li>
-          ))}
-        </ul>
       </div>
     );
   };
@@ -119,30 +94,30 @@ const RecipeDetails = ({ selectedRecipe, closeDetails, urls, imageCSS, hoverColo
       <div style={styles.itemsCard}>
         <h4 style={styles.resultTitle}>You Will Obtain:</h4>
         {renderCards(findImageForElement(selectedRecipe.result, selectedRecipe.tier))}
-        {renderOptionsCard()}
+        {/* Pass selectedCard and selectedRecipe to OptionsCard */}
+        <OptionsCard selectedCard={selectedCard} selectedRecipe={selectedRecipe} />
       </div>
     );
   };
 
   useEffect(() => {
-    // Activar la visibilidad para iniciar la animación de deslizamiento
     setIsVisible(true);
 
     const style = document.createElement('style');
     style.type = 'text/css';
     style.innerHTML = `
       .detailsPanel {
-        overflow-y: scroll; /* Permite el desplazamiento vertical */
-        scrollbar-width: none; /* Para Firefox */
+        overflow-y: scroll;
+        scrollbar-width: none;
       }
       .detailsPanel::-webkit-scrollbar {
-        display: none; /* Para Chrome, Safari y Opera */
+        display: none;
       }
     `;
     document.head.appendChild(style);
 
     return () => {
-      document.head.removeChild(style); // Cleanup al desmontar el componente
+      document.head.removeChild(style);
     };
   }, []);
 
@@ -150,8 +125,8 @@ const RecipeDetails = ({ selectedRecipe, closeDetails, urls, imageCSS, hoverColo
     <div
       style={{
         ...styles.detailsPanel,
-        transform: isVisible ? 'translateX(0)' : 'translateX(100%)', // Deslizar desde la derecha
-        transition: 'transform 0.5s ease-out', // Transición para el deslizamiento
+        transform: isVisible ? 'translateX(0)' : 'translateX(100%)',
+        transition: 'transform 0.5s ease-out',
       }}
       className="detailsPanel"
     >
@@ -168,7 +143,7 @@ const RecipeDetails = ({ selectedRecipe, closeDetails, urls, imageCSS, hoverColo
         <div style={styles.tabs}>
           {[{ key: 'craftings', label: 'Craftings' },
             { key: 'recraftings', label: 'Recraftings' },
-            { key: 'craftingFragments', label: 'Fragments' }].map(tab => (
+            { key: 'craftingfragments', label: 'Fragments' }].map(tab => (
             <button
               key={tab.key}
               style={activeTab === tab.key ? styles.activeTab(imageCSS, hoverColorCSS) : styles.tab(imageCSS, hoverColorCSS)}
@@ -397,6 +372,17 @@ const styles = {
     fontWeight: 'bold',
     color: 'white',
     margin: '10px 0',
+  },
+   optionList: {
+    listStyleType: 'none',
+    padding: '0',
+    margin: '0',
+    textAlign: 'left', // Align the text to the left
+  },
+  optionSubList: {
+    listStyleType: 'none',
+    paddingLeft: '20px', // Add indentation for sub-lists
+    margin: '0',
   },
   itemsCard: {
     position: 'relative',
