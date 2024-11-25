@@ -12,7 +12,8 @@ export const GlobalStateProvider = ({ children }) => {
 
   const secretKey = process.env.REACT_APP_AES_SECRET_KEY;
   const iv = process.env.REACT_APP_AES_IV;
-
+  console.log(secretKey)
+  console.log(iv)
 
   const decryptData = (encryptedData) => {
     try {
