@@ -2,30 +2,53 @@ import React, { useEffect, useState } from 'react';
 
 // Definir los colores para las rarezas
 const rarityColors = [
-  '#ffffff', // Common
-  '#009045', // Uncommon
-  '#009bdb', // Rare
-  '#87599a', // Epic
-  '#dc9600'  // Legendary
+  '#ffffff', // BASIC
+  '#009045', // ENHANCED
+  '#009bdb', // ADVANCED
+  '#87599a', // SUPER
+  '#dc9600'  // ULTIMATE
+];
+
+// Rarezas definidas (en mayúsculas)
+const rarityNames = [
+  'BASIC',
+  'ENHANCED',
+  'ADVANCED',
+  'SUPER',
+  'ULTIMATE'
 ];
 
 const OptionsCard = ({ selectedCard, selectedRecipe }) => {
-  const [rarityName, setRarityName] = useState('Common'); // Definir rareza predeterminada
+  const [rarityName, setRarityName] = useState('BASIC'); // Establecer "BASIC" como rareza predeterminada
+  const [selectedRarityColor, setSelectedRarityColor] = useState('#ffffff'); // Color inicial para rareza BASIC
 
   useEffect(() => {
-    // Cuando selectedCard o selectedRecipe cambian, se debe revisar la rareza
     if (selectedRecipe && selectedCard !== null) {
-      // Asegúrate de obtener la rareza de la receta solo si hay una receta y una carta seleccionada
+      // Cuando selectedCard o selectedRecipe cambian, revisar la rareza
       const selectedRarity = selectedRecipe.rarity[selectedCard];
-      if (selectedRarity) {
-        setRarityName(selectedRarity); // Establecer la rareza seleccionada
+
+      // Comparamos la rareza recibida en minúsculas y la convertimos a mayúsculas
+      const matchingRarity = rarityNames.find(rarity => rarity.toLowerCase() === selectedRarity?.toLowerCase());
+
+      // Si se encuentra la rareza, la establecemos
+      if (matchingRarity) {
+        setRarityName(matchingRarity);
+        setSelectedRarityColor(rarityColors[rarityNames.indexOf(matchingRarity)]); // Establecer color correspondiente
       } else {
-        setRarityName('Common'); // Si no hay rareza, usar la predeterminada
+        setRarityName('BASIC'); // Si no se encuentra una coincidencia válida, se establece "BASIC"
+        setSelectedRarityColor(rarityColors[0]); // Establecer color de BASIC
       }
     } else {
-      setRarityName('Common'); // Si no hay receta o carta seleccionada, usar la predeterminada
+      setRarityName('BASIC'); // Si no hay receta o carta seleccionada, establecer "BASIC"
+      setSelectedRarityColor(rarityColors[0]); // Establecer color de BASIC
     }
-  }, [selectedCard, selectedRecipe]); // Este hook se ejecutará cada vez que cambien selectedCard o selectedRecipe
+  }, [selectedCard, selectedRecipe]); // El hook se ejecuta cada vez que cambian selectedCard o selectedRecipe
+
+  // Función para manejar el clic en la rareza
+  const handleRarityClick = (index) => {
+    setRarityName(rarityNames[index]);
+    setSelectedRarityColor(rarityColors[index]);
+  };
 
   // Si no hay receta o carta seleccionada, no renderizar el componente
   if (!selectedRecipe || selectedCard === null) return null;
@@ -66,7 +89,7 @@ const OptionsCard = ({ selectedCard, selectedRecipe }) => {
     return (
       <div style={styles.optionsCard}>
         <h4 style={{ marginTop: '0px' }}>Options for {selectedRecipe.result}:</h4>
-        <div style={{ ...styles.rarityBox , backgroundColor: '#d4a21a' , color:'withe'}}>
+        <div style={{ ...styles.rarityBox, backgroundColor: '#d4a21a', color: 'white' }}>
           <span style={styles.rarityText}>OPTIONS FOR THIS ITEM ARE UNDER MAINTENANCE</span>
         </div>
       </div>
@@ -76,8 +99,11 @@ const OptionsCard = ({ selectedCard, selectedRecipe }) => {
   return (
     <div style={styles.optionsCard}>
       <h4 style={{ marginTop: '0px' }}>Options for {selectedRecipe.result}:</h4>
-      <div style={{ ...styles.rarityBox, backgroundColor: rarityColors[selectedCard] }}>
-        <span style={styles.rarityText}>{rarityName ? rarityName.trim().toUpperCase() : 'Unknown'}</span>
+      <div 
+        style={{ ...styles.rarityBox, backgroundColor: selectedRarityColor }} 
+        onClick={() => handleRarityClick(rarityNames.indexOf(rarityName))}
+      >
+        <span style={styles.rarityText}>{rarityName ? rarityName.trim().toUpperCase() : 'UNKNOWN'}</span>
       </div>
       <ul style={styles.optionList}>
         {processedAttributes.length > 0 && (
@@ -117,9 +143,10 @@ const styles = {
     padding: '10px',
     borderRadius: '5px',
     marginBottom: '10px',
+    cursor: 'pointer', // Indicar que es interactivo
   },
   rarityText: {
-    color: 'Black',
+    color: 'black',
     fontSize: '16px',
     fontWeight: 'bold',
     textAlign: 'center', // Centrar el texto en la caja de rareza
@@ -145,4 +172,3 @@ const styles = {
 };
 
 export default OptionsCard;
-

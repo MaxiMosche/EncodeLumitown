@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';  
+import { useLocation } from 'react-router-dom';  // Importa useLocation
 import CryptoJS from 'crypto-js';  
 
 const GlobalStateContext = createContext();
@@ -8,13 +8,12 @@ export const GlobalStateProvider = ({ children }) => {
   const [recipes, setRecipes] = useState([]);
   const [urls, setUrls] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const location = useLocation();  
+  const location = useLocation();  // Obtiene la ruta actual
 
   const secretKey = process.env.REACT_APP_AES_SECRET_KEY;
   const iv = process.env.REACT_APP_AES_IV;
-  console.log(secretKey)
-  console.log(iv)
 
+  // Función para desencriptar los datos
   const decryptData = (encryptedData) => {
     try {
       const bytes = CryptoJS.AES.decrypt(encryptedData, CryptoJS.enc.Utf8.parse(secretKey), {
