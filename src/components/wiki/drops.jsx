@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
 
-  const secretKey = process.env.REACT_APP_AES_SECRET_KEY;
-  const iv = process.env.REACT_APP_AES_IV;
+const secretKey = "A9F1A8D0C8A5A6E6B0B9F1C1D6B9E3D1";
+const iv = "B6D7A9F1C3E9A2F0";
 
 const decryptData = (encryptedData) => {
   try {
@@ -66,11 +66,19 @@ const DropsCard = ({ drop, isSelected, onClick, cardRef }) => {
   };
 
   // Función para capitalizar la primera letra de cada palabra
-  const capitalizeWords = (str) => {
-    return str
+  const capitalizeWords = (str, maxLength) => {
+    // Capitalizar las palabras
+    const capitalizedStr = str
       .split(' ') // Dividir la cadena en palabras
       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalizar la primera letra
       .join(' '); // Volver a unir las palabras
+    
+    // Truncar la cadena si es necesario
+    if (capitalizedStr.length > maxLength) {
+      return capitalizedStr.slice(0, maxLength - 3) + '...';
+    }
+  
+    return capitalizedStr;
   };
 
   return (
@@ -81,7 +89,7 @@ const DropsCard = ({ drop, isSelected, onClick, cardRef }) => {
     >
       <img src={drop.url} alt={drop.dropName} style={styles.cardImg} />
       <div style={styles.cardBody}>
-        <h5 style={styles.cardTitle}>{capitalizeWords(drop.dropName)}</h5> {/* Aplicar la función capitalizeWords */}
+        <h5 style={styles.cardTitle}>{capitalizeWords(drop.dropName, 20)}</h5> {/* Aplicar la función capitalizeWords */}
         <div style={{ ...styles.typeCard, backgroundColor: getTypeColor(drop.type) }}>
           <strong>{drop.type.toUpperCase()}</strong>
         </div>
