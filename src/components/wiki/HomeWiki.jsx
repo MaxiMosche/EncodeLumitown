@@ -111,6 +111,13 @@ const cardData = {
     },
     {
       "id": 4,
+      "image": "https://res.cloudinary.com/dm94dpmzy/image/upload/v1732829483/features-farming-screenshot_1_akbgbi.webp",
+      "title": "Drops",
+      "description": "Discover valuable items in Lumiterra, dropped by specific creatures. Defeat bosses and find rare items to aid you on your journey.",
+      "redirect": "/drops"
+    },
+    {
+      "id": 5,
       "image": "https://res.cloudinary.com/dm94dpmzy/image/upload/v1730948391/GbdwJV0bIAAUf_s_e0xuin.webp",
       "title": "Guides",
       "description": "Explore comprehensive guides to help you master every aspect of Lumiterra crafting.",

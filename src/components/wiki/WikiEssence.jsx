@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Tooltip from './Tooltip'; // Importar el componente Tooltip
+import InfoIcon from '@mui/icons-material/Info';
+import Tooltip from './Tooltip';
 
 const ItemCard = ({ item, onMouseEnter, onMouseLeave, onClick }) => {
   return (
@@ -57,7 +58,26 @@ const WikiEssence = () => {
   const [tooltip, setTooltip] = useState({ visible: false, name: '', x: 0, y: 0 });
   const [hoveredItem, setHoveredItem] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null); // Nuevo estado para el ítem seleccionado
-
+  const [showButtons, setShowButtons] = useState(false);
+  // Example handler for showing/hiding buttons
+  const handleToggleButtons = () => {
+    console.log('selectedItem:', selectedItem.name); // Verificar valor de selectedItem
+    if (selectedItem && selectedItem.name) {
+      
+      const itemName = selectedItem.name.toLowerCase();
+  
+      // Verificar si el nombre del ítem no contiene la palabra "essence"
+      if (!itemName.includes("essence")) {
+        window.open(`/drops?name=${encodeURIComponent(itemName)}`, '_blank');
+      } else {
+        alert(itemName);
+      }
+    } else {
+      alert('No item selected or the item is missing an element property!');
+    }
+  
+    setShowButtons(prevState => !prevState);
+  };
   useEffect(() => {
     const originalBodyStyle = document.body.style.cssText;
 
@@ -286,49 +306,129 @@ const WikiEssence = () => {
   <div
     style={{
       position: 'fixed',
-      top: '250px',
+      top: '350px',
       right: '0',
       transform: 'translateY(-50%)',
-      width: '250px',
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      width: '280px',
+      background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6))',
       color: 'white',
       padding: '20px',
-      borderRadius: '8px 0 0 8px',
-      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
-      zIndex: 1000, // Asegúrate de que esté encima de otros elementos
+      borderRadius: '15px', // Bordes más redondeados
+      boxShadow: '0 6px 20px rgba(0, 0, 0, 0.8)', // Sombra más difusa y elegante
+      zIndex: 1000,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      transition: 'all 0.3s ease', // Transición suave
+      backdropFilter: 'blur(10px)', // Efecto de desenfoque en el fondo
     }}
   >
     <button
       onClick={() => setSelectedItem(null)} // Cerrar la pestaña
       style={{
+        background: 'transparent',
+        color: 'white',
+        border: 'none',
+        fontSize: '28px',
+        cursor: 'pointer',
         position: 'absolute',
         top: '10px',
         right: '10px',
-        background: 'transparent',
-        border: 'none',
-        color: 'white',
-        fontSize: '20px',
-        cursor: 'pointer',
+        transition: 'color 0.3s ease, transform 0.3s ease',
+      }}
+      onMouseOver={(e) => {
+        e.target.style.color = '#ff6347';
+        e.target.style.transform = 'scale(1.2)';
+      }}
+      onMouseOut={(e) => {
+        e.target.style.color = 'white';
+        e.target.style.transform = 'scale(1)';
       }}
     >
       ×
     </button>
 
-    <h3>
+    <h3
+      style={{
+        fontSize: '1.5rem', 
+        marginBottom: '15px',
+        textTransform: 'capitalize',
+        letterSpacing: '1px',
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        color: '#f0f0f0',
+      }}
+    >
       {selectedItem.name
         .trim()
         .replace(/\b\w/g, (char) => char.toUpperCase())}
     </h3>
-    <img
-      src={getImageUrl(selectedItem.name)}
-      alt={selectedItem.name}
-      style={{
-        width: '100%',
-        height: 'auto',
-        objectFit: 'contain',
-        borderRadius: '5px',
-      }}
-    />
+
+    <div style={{ position: 'relative', width: '100%', height: 'auto' }}>
+      <img
+        src={getImageUrl(selectedItem.name)}
+        alt={selectedItem.name}
+        style={{
+          width: '100%',
+          height: 'auto',
+          objectFit: 'cover',
+          borderRadius: '10px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.6)', // Sombra alrededor de la imagen
+        }}
+      />
+      
+      {/* Buttons Container */}
+      <div className={`buttons-container ${showButtons ? 'show' : ''}`} style={{ marginTop: '15px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <button
+          className="find-button"
+          onClick={handleToggleButtons}
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            color: 'white',
+            border: 'none',
+            padding: '10px',
+            borderRadius: '8px',
+            fontSize: '14px',
+            textTransform: 'uppercase',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s ease',
+          }}
+        >
+          Where to find
+        </button>
+        <button
+          className="find-button"
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            color: 'white',
+            border: 'none',
+            padding: '10px',
+            borderRadius: '8px',
+            fontSize: '14px',
+            textTransform: 'uppercase',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s ease',
+          }}
+        >
+          Market (Coming Soon!)
+        </button>
+        <button
+          className="find-button"
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            color: 'white',
+            border: 'none',
+            padding: '10px',
+            borderRadius: '8px',
+            fontSize: '14px',
+            textTransform: 'uppercase',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s ease',
+          }}
+        >
+          Map (Coming Soon!)
+        </button>
+      </div>
+    </div>
   </div>
 )}
       {/* Mostrar tooltip */}

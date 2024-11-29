@@ -9,8 +9,8 @@ import MarketCard from './components/market/MarketCard';
 import HomeWiki from './components/wiki/HomeWiki'
 import WikiEssence from './components/wiki/WikiEssence';
 import Wikiconsumable from './components/wiki/wikiconsumable';
-import MapComponent from './components/map/map'
 import { Analytics } from '@vercel/analytics/react';
+import Drops from './components/wiki/drops';
 
 
 function App() {
@@ -23,10 +23,10 @@ function App() {
           <Route path="/home" element={<Navigate to="/" />} />
           <Route path="/wiki" element={<Wiki />} />
           <Route path="/market" element={<MarketCard />} /> {/* Usamos GlobalMarket aquí */}
+          <Route path="/drops" element={<Drops />} />
           <Route path="/homewiki" element={<HomeWiki />} />
           <Route path="/essence" element={<WikiEssence />} />
           <Route path="/consumable" element={<Wikiconsumable />} />
-          <Route path="/map" element={<MapComponent />} /> 
           <Route path="/lumitow-info" element={<LumitowInfo />} /> {/* Nueva ruta para LumitowInfo */}
         </Routes>
       </Topbar>

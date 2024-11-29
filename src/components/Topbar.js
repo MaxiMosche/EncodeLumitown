@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
   const location = useLocation(); // Obtener la ubicación actual
 
   // Verificar si estamos en la ruta '/market'
-  const isMarketPage = location.pathname === '/market' || location.pathname === '/map' || location.pathname === '/consumable' || location.pathname === '/wiki';
+  const isMarketPage = location.pathname !== '/' ;
 
   // Estado para controlar si la pantalla es pequeña
   const [isSmallScreen, setIsSmallScreen] = useState(false);

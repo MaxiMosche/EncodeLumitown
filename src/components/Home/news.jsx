@@ -2,24 +2,26 @@ import React, { useEffect, useState } from 'react';
 import ResponsiveTitle from './ResponsiveTitle';
 
 const TarjetasNoticias = ({ onCardClick }) => {
-    const detallesTarjetas = [
-        { id: 10, title: "Beginner's Guide", src: 'https://res.cloudinary.com/dm94dpmzy/image/upload/v1730944869/Tutoriales_Lumitown_je10oc.webp', 
-            info: 'These will be your first big steps.', 
-            secondarySrc: 'https://res.cloudinary.com/dm94dpmzy/image/upload/v1730944869/Tutoriales_Lumitown_je10oc.webp', 
-            video: 'https://www.youtube.com/embed/QOQyp4mFEBo?si=oFGcP9mjamri9CV8',
-             text: 'Lumiterra has released an updated guide that summarizes the initial experiences in the game for new adventurers. Starting in the Land of Departure, players will encounter several key NPCs who will guide them step by step through this mysterious land.',
-             link: 'https://lumiterra.notion.site/Land-of-Departure-and-Beginner-Tasks-963f054eb3b54e6d8c19a286cc80e94d' },
-             
-        { id: 11, title: "Comprehensive Enhancement", src: 'https://res.cloudinary.com/dm94dpmzy/image/upload/v1730947031/Encantamientos_nq9smw.webp', info: "Limits? They don't exist.", secondarySrc: 'https://res.cloudinary.com/dm94dpmzy/image/upload/v1730947031/Encantamientos_nq9smw.webp', video: 'https://www.youtube.com/embed/8HcMWkwPEYI?si=5WJoLdwvsI5I7yyA', text: "Lumiterra has introduced an enchanting system that allows players to significantly upgrade their equipment and optimize performance. This system offers a tiered progression, where players can bring their base gear to new levels, bringing it closer to its epic states. By participating in the process, players also take part in a Lottery system, with rewards that make it all worthwhile." ,link: 'https://lumiterra.notion.site/Lumiterra-CBT-2-Features-Update-131211cc5a8880b5ba5ac6b206c7d985' },
-        { id: 12, title: 'New Dungeon Feature', src: 'https://res.cloudinary.com/dm94dpmzy/image/upload/v1730947372/https3A2F2Fprod-files-secure_i66mel.webp', info: 'Adventurers, you will always be able to go further.', secondarySrc: 'https://res.cloudinary.com/dm94dpmzy/image/upload/v1730947372/https3A2F2Fprod-files-secure_i66mel.webp', video: 'https://www.youtube.com/embed/kcL55QJEfVQ?si=-89RWI-QoIJI4U5F', text: 'Lumiterra has introduced a new feature in dungeons: difficulty selection. Now, players can choose from different difficulty levels when entering dungeons, allowing them to adjust the experience based on their skills and the level of challenge they wish to face',link: 'https://lumiterra.notion.site/Lumiterra-CBT-2-Features-Update-131211cc5a8880b5ba5ac6b206c7d985' },
-        { id: 13, title: 'Generous Dungeon Rewards', src: 'https://res.cloudinary.com/dm94dpmzy/image/upload/v1730947592/image_pnskci.webp', info: 'Unimaginable rewards!', secondarySrc: 'https://res.cloudinary.com/dm94dpmzy/image/upload/v1730947592/image_pnskci.webp', video: 'https://www.youtube.com/embed/B7IrKfRvbvc?si=JaYkx-jmWq5y9zCk', text: 'Dungeon rewards increase with difficulty: the higher the difficulty, the better the prizes, including valuable materials and rare items.' ,link: 'https://lumiterra.notion.site/Lumiterra-CBT-2-Features-Update-131211cc5a8880b5ba5ac6b206c7d985'},
-        { id: 14, title: 'Lumiterra CBT#2', src: 'https://res.cloudinary.com/dm94dpmzy/image/upload/v1730950749/asd_s_bddpai.webp', info: "It's very close.", secondarySrc: 'https://res.cloudinary.com/dm94dpmzy/image/upload/v1730950749/asd_s_bddpai.webp', video: '', text: 'The CBT#2 of Lumiterra has been announced, along with exciting updates that will enhance the gaming experience.' ,link: 'https://x.com/LumiterraGame/status/1851157426093113355'},
-        { id: 15, title: 'Global Servers ', src: 'https://res.cloudinary.com/dm94dpmzy/image/upload/v1730763305/noticia1_ukpbo7.webp', info: 'Servers are coming!', secondarySrc: 'https://res.cloudinary.com/dm94dpmzy/image/upload/v1730763305/noticia1_ukpbo7.webp', video: '', text: 'One of the most awaited news: Lumi Players will have better connectivity thanks to dedicated servers.' ,link: 'https://x.com/Jihoz_Axie/status/1837321453705867460'},
-    ];
-
+    const [detallesTarjetas, setDetallesTarjetas] = useState([]);
     const [tamañoTarjeta, setTamañoTarjeta] = useState('300px');
     const [altoTarjeta, setAltoTarjeta] = useState('350px');
     const [tamañoLetra, setTamañoLetra] = useState('16px');
+
+    // Función para obtener las noticias desde el endpoint
+    const obtenerNoticias = async () => {
+        try {
+            const response = await fetch('https://lumitownserver.somee.com/GetListNews');
+            const data = await response.json();
+            // Asignar id mayor a 10000
+            const tarjetasConId = data.map((tarjeta, index) => ({
+                ...tarjeta,
+                id: 10000 + index + 1, // Asegurando que los id sean mayores a 10000
+            }));
+            setDetallesTarjetas(tarjetasConId);
+        } catch (error) {
+            console.error('Error al obtener las noticias:', error);
+        }
+    };
 
     const actualizarTamañoTarjeta = () => {
         if (window.innerWidth <= 1130 && window.innerWidth > 900) {
@@ -42,6 +44,7 @@ const TarjetasNoticias = ({ onCardClick }) => {
     };
 
     useEffect(() => {
+        obtenerNoticias(); // Cargar noticias al montar el componente
         actualizarTamañoTarjeta();
         window.addEventListener('resize', actualizarTamañoTarjeta);
         return () => window.removeEventListener('resize', actualizarTamañoTarjeta);
@@ -49,7 +52,7 @@ const TarjetasNoticias = ({ onCardClick }) => {
 
     return (
         <div>
-            <ResponsiveTitle text="LATEST NEWS" /> {/* Cambia aquí */}
+            <ResponsiveTitle text="LATEST NEWS" />
             <div style={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -106,7 +109,6 @@ const TarjetasNoticias = ({ onCardClick }) => {
                     </div>
                 ))}
             </div>
-
         </div>
     );
 };

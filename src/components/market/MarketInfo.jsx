@@ -229,7 +229,7 @@ const MarketInfo = ({ item, onClose }) => {
           ? item.name.split('·')[1].trim()  // Recorta todo antes del punto (incluido el punto)
           : item.name;
 
-        const response = await fetch('https://www.lumitown.somee.com/MenuItemsFilter', {
+        const response = await fetch('https://lumitownserver.somee.com/MenuItemsFilter', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -266,11 +266,11 @@ const MarketInfo = ({ item, onClose }) => {
   };
 
   if (loading) {
-    return <div style={styles.loading}>Cargando...</div>;
+    return <div style={styles.loading}>Loading...</div>;
   }
-
+  
   if (!itemDetails) {
-    return <div style={styles.error}>No se encontraron detalles del ítem</div>;
+    return <div style={styles.error}>Item details not found</div>;
   }
 
   return (
