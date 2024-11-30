@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
 
-const secretKey = "A9F1A8D0C8A5A6E6B0B9F1C1D6B9E3D1";
-const iv = "B6D7A9F1C3E9A2F0";
+const secretKey = process.env.REACT_APP_AES_SECRET_KEY;
+const iv = process.env.REACT_APP_AES_IV;
 
 const decryptData = (encryptedData) => {
   try {
@@ -152,8 +152,12 @@ const DropsList = () => {
     });
 
     // Cambiar el fondo de la página
-    document.body.style.backgroundImage = '';
-    document.body.style.backgroundColor = '#404040';
+    document.body.style.backgroundColor = '#09132c'; 
+    document.body.style.backgroundImage = 'url("https://res.cloudinary.com/dm94dpmzy/image/upload/v1731964105/wiki_home_sbsqrw.webp")';
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.backgroundAttachment = 'fixed';
+    document.body.style.backgroundRepeat = 'no-repeat';
   }, []);
 
   useEffect(() => {
@@ -220,7 +224,7 @@ const styles = {
     border: '1px solid #ccc',
     borderRadius: '8px',
     overflow: 'hidden',
-    backgroundColor: '#333',
+    backgroundColor: 'rgba(51, 51, 51, 0.5)',
     color: 'white',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     display: 'flex',

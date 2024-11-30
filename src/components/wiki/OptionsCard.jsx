@@ -74,9 +74,18 @@ const OptionsCard = ({ selectedCard, selectedRecipe }) => {
 
           // Procesar opciones (de string a array)
           const optionsArray = optionObject.options ? optionObject.options.split(',') : [];
-          processedOptions.push(...optionsArray);
+          // Filtrar las opciones que no sean "none"
+          const filteredOptions = optionsArray.filter(opt => opt.toLowerCase() !== 'none');
+          processedOptions.push(...filteredOptions);
         }
       });
+    }
+
+    // Si las opciones o atributos procesados están vacíos, restaurar a "BASIC"
+    if ((processedOptions.length === 0 && processedAttributes.length === 0) || 
+        (processedOptions.length === 0 && processedAttributes.length === 0 && rarityName !== 'BASIC')) {
+      setRarityName('BASIC');
+      setSelectedRarityColor(rarityColors[0]); // Volver a color BASIC
     }
 
     return { processedOptions, processedAttributes };
@@ -172,3 +181,4 @@ const styles = {
 };
 
 export default OptionsCard;
+

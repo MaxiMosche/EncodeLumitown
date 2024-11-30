@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import InfoIcon from '@mui/icons-material/Info';
+import PresentationCard from './PresentationCard';
 
 const Wikiconsumable = () => {
   const [recipes, setRecipes] = useState([]);
   const [images, setImages] = useState([]);
-  const [selectedItem, setSelectedItem] = useState(null);  // Estado para almacenar el ítem seleccionado
-  const navigate = useNavigate();  // Hook de navegación para ir a /homewiki
+  const [selectedItem, setSelectedItem] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('https://www.lumitown.somee.com/GetListRepiceConsumable')
@@ -17,12 +17,18 @@ const Wikiconsumable = () => {
       .then((response) => response.json())
       .then((data) => setImages(data));
 
-    document.body.style.backgroundColor = '#09132c'; 
+    document.body.style.backgroundColor = '#09132c';
     document.body.style.backgroundImage = 'url("https://res.cloudinary.com/dm94dpmzy/image/upload/v1731964105/wiki_home_sbsqrw.webp")';
     document.body.style.backgroundSize = 'cover';
     document.body.style.backgroundPosition = 'center';
     document.body.style.backgroundAttachment = 'fixed';
     document.body.style.backgroundRepeat = 'no-repeat';
+
+    document.body.style.display = 'flex';
+    document.body.style.justifyContent = 'center';
+    document.body.style.alignItems = 'flex-start';
+    document.body.style.minHeight = '100vh';
+    document.body.style.margin = '0';
   }, []);
 
   const getImageUrl = (elementName) => {
@@ -31,7 +37,7 @@ const Wikiconsumable = () => {
   };
 
   const handleItemClick = (item) => {
-    setSelectedItem(item);  // Actualiza el estado con el ítem seleccionado
+    setSelectedItem(item);
   };
 
   const ItemCard = ({ item }) => {
@@ -47,15 +53,19 @@ const Wikiconsumable = () => {
     );
   };
 
-  const CraftingCard = ({ sectionTitle, items, mainImageUrl, mainTitle }) => {
-    // Handler for main image click to open the info panel
+  const CraftingCard = ({ sectionTitle, items, mainImageUrl, mainTitle, tier }) => {
     const handleMainImageClick = () => {
-      const mainItem = { element: mainTitle, quantity: 1 }; // You can customize this object
-      setSelectedItem(mainItem);  // Set the selected item to the one that was clicked
+      const mainItem = { element: mainTitle, quantity: 1 };
+      setSelectedItem(mainItem);
     };
 
     return (
-      <div className="crafting-card">
+      <div className="crafting-card" style={{ position: 'relative' }}>
+        {/* Minicard del tier */}
+        <div className="tier-card">
+          Tier {tier}
+        </div>
+
         <div className="main-image" onClick={handleMainImageClick}>
           <img
             src={mainImageUrl}
@@ -84,11 +94,25 @@ const Wikiconsumable = () => {
     const mainImageUrl = getImageUrl(recipe.result);
     const mainTitle = recipe.result;
 
+    // Controlamos si ya se ha mostrado la sección de "Craft Default"
+    let craftDefaultShown = false;
+
     return (
       <div className="recipe-cards">
+        {/* Card de Tier solo una vez */}
         <div className="recipe-row">
           {craftingSections.map((section, index) => {
             if (section.items.length === 0) return null;
+
+            // Si la sección es 'Craft Default' y ya se mostró, la omite
+            if (section.title === 'Craft Default' && craftDefaultShown) {
+              return null;
+            }
+
+            // Si es 'Craft Default', marcamos que ya se mostró
+            if (section.title === 'Craft Default') {
+              craftDefaultShown = true;
+            }
 
             return (
               <CraftingCard
@@ -97,6 +121,7 @@ const Wikiconsumable = () => {
                 items={section.items}
                 mainImageUrl={mainImageUrl}
                 mainTitle={mainTitle}
+                tier={recipe.tier}  // Pasamos el tier a cada CraftingCard
               />
             );
           })}
@@ -120,57 +145,51 @@ const Wikiconsumable = () => {
     navigate('/homewiki');
   };
 
-  // Función para cerrar el info-panel
   const handleCloseInfoPanel = () => {
-    setSelectedItem(null); // Restablecer el ítem seleccionado
+    setSelectedItem(null);
   };
 
-  const [showButtons, setShowButtons] = useState(false); // Estado para manejar la visibilidad de los botones
+  const [showButtons, setShowButtons] = useState(false);
   const handleFindClick = () => {
     if (selectedItem) {
       const itemName = selectedItem.element.toLowerCase();
-  
-      // Exclude specific items from being sent to /drops
+
       const excludedItems = [
         'energy restoration potion',
         'energy slime',
         'empty bottle'
       ];
-  
-      if (!excludedItems.includes(itemName)) {
-        // Open the URL in a new tab using _blank
+
+      if (!excludedItems.some(excludedItem => itemName.toLowerCase().includes(excludedItem))) {
         window.open(`/drops?name=${encodeURIComponent(selectedItem.element)}`, '_blank');
       } else {
-        // If excluded, you can handle differently or leave it as is
-        alert('This item cannot be found on the drops page.');
+        console.log('This item cannot be found on the drops page.');
       }
     }
   };
 
   return (
     <div>
-      {/* Botón de retroceso */}
       <button className="back-button" onClick={handleGoBack}>
         &lt;
       </button>
+      <PresentationCard images={images} />
 
       <div className="wikiconsumable-container">
-        <div className="recipes-list">
-          {sortedTiers.map((tier) => (
-            <div key={tier} className="tier-group">
-              <div className="tier-card">
-                <h2>Tier {tier}</h2>
+        <div className="cards-wrapper">
+          <div className="recipes-list">
+            {sortedTiers.map((tier) => (
+              <div key={tier} className="tier-group">
+                <div className="recipes">
+                  {groupedByTier[tier].map((recipe) => (
+                    <RecipeCard key={recipe.id} recipe={recipe} />
+                  ))}
+                </div>
               </div>
-              <div className="recipes">
-                {groupedByTier[tier].map((recipe) => (
-                  <RecipeCard key={recipe.id} recipe={recipe} />
-                ))}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        {/* Pestaña de información */}
         {selectedItem && (
           <div className="info-panel">
             <button className="close-button" onClick={handleCloseInfoPanel}>
@@ -188,25 +207,24 @@ const Wikiconsumable = () => {
                 alt={selectedItem.element}
                 className="info-image"
               />
-              {/* Contenedor de botones desplegables */}
               <div className={`buttons-container ${showButtons ? 'show' : ''}`}>
-                   <button className="find-button" onClick={handleFindClick}>
-                     Where to find
-                   </button>
-                   <button className="find-button">Market (Coming Soon!)</button>
-                   <button className="find-button">Map (Coming Soon!)</button>
+                <button className="find-button" onClick={handleFindClick}>
+                  Where to find
+                </button>
+                <button className="find-button">Market (Coming Soon!)</button>
+                <button className="find-button">Map (Coming Soon!)</button>
               </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Estilos CSS dentro del componente */}
       <style jsx>{`
           .wikiconsumable-container {
             padding: 20px;
-             margin-top: -60px;
-            width: 97%;
+            margin-top: -60px;
+            justify-content: center; /* Centra los elementos de izquierda a derecha */
+            width: 97%; /* Asegura que ocupe todo el ancho disponible */
             display: flex;
           }
   
@@ -278,7 +296,7 @@ const Wikiconsumable = () => {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
-            justify-content: flex-start;
+            justify-content: center;
             flex-grow: 1;
           }
   
@@ -492,9 +510,23 @@ const Wikiconsumable = () => {
         .find-button:focus {
           outline: none;
         }
-  
+
+        .tier-card {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  background-color: rgba(255, 255, 255, 0.7);
+  color: #333;
+  padding: 1px 0px;
+  font-size: 1rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
       `}</style>
+
+
     </div>
+
   );
 };
 

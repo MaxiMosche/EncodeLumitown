@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import InfoIcon from '@mui/icons-material/Info';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Tooltip from './Tooltip';
 
 const ItemCard = ({ item, onMouseEnter, onMouseLeave, onClick }) => {
@@ -59,7 +58,8 @@ const WikiEssence = () => {
   const [hoveredItem, setHoveredItem] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null); // Nuevo estado para el ítem seleccionado
   const [showButtons, setShowButtons] = useState(false);
-  // Example handler for showing/hiding buttons
+  const location = useLocation();
+  const itemRefs = useRef({});
   const handleToggleButtons = () => {
     console.log('selectedItem:', selectedItem.name); // Verificar valor de selectedItem
     if (selectedItem && selectedItem.name) {
@@ -70,17 +70,18 @@ const WikiEssence = () => {
       if (!itemName.includes("essence")) {
         window.open(`/drops?name=${encodeURIComponent(itemName)}`, '_blank');
       } else {
-        alert(itemName);
+        console.log(itemName);
       }
     } else {
-      alert('No item selected or the item is missing an element property!');
+      console.log('No item selected or the item is missing an element property!');
     }
   
     setShowButtons(prevState => !prevState);
   };
   useEffect(() => {
     const originalBodyStyle = document.body.style.cssText;
-
+    const urlParams = new URLSearchParams(location.search);
+    const searchName = urlParams.get('name');
     document.body.style.backgroundColor = '#09132c'; 
     document.body.style.backgroundImage = 'url("https://res.cloudinary.com/dm94dpmzy/image/upload/v1731964105/wiki_home_sbsqrw.webp")';
     document.body.style.backgroundSize = 'cover';
@@ -115,6 +116,38 @@ const WikiEssence = () => {
       document.body.style.cssText = originalBodyStyle;
     };
   }, []);
+
+  useEffect(() => {
+    console.log(location.search);
+    if (location.search && getList.length > 0) {
+      const searchName = new URLSearchParams(location.search).get('name');
+      if (searchName) {
+        const item = getList.find(item => item.result.toLowerCase() === searchName.toLowerCase());
+        const itemId = item?.id; // Obtenemos el id del ítem encontrado
+        console.log('itemId:', itemId); // Verifica el id del ítem
+  
+        if (itemId) {
+          console.log('itemRefs.current:', itemRefs.current); // Verifica si todas las refs están correctamente asignadas
+          console.log('itemRefs.current[itemId]:', itemRefs.current[itemId]); // Verifica el ref del ítem
+  
+          // Asegúrate de que el ref existe
+          if (itemRefs.current[itemId]) {
+            // Realiza el scroll
+            itemRefs.current[itemId].scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+            });
+  
+            // Resalta la tarjeta si quieres
+            itemRefs.current[itemId].style.backgroundColor = '#f0f0f0';
+          } else {
+            console.log('El ref no está asignado para el ítem con id:', itemId);
+          }
+        }
+      }
+    }
+  }, [getList, location.search]);
+  
 
   const getImageUrl = (name) => {
     const urlObj = urlList.find(item => item.name === name);
@@ -219,85 +252,87 @@ const WikiEssence = () => {
             {type.charAt(0).toUpperCase() + type.slice(1)}
           </h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-            {groupedItems[type].map((item) => (
-              <div
-                key={item.id}
-                style={{
-                  position: 'relative',
-                  width: '230px',
-                  maxHeight: '300px',
-                  margin: '20px',
-                  textAlign: 'center',
-                  border: '1px solid #ccc',
-                  borderRadius: '8px',
-                  padding: '20px',
-                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.05)';
-                  e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 255, 255, 0.7)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
-                }}
-              >
-                <img
-                  src="https://res.cloudinary.com/dm94dpmzy/image/upload/v1731988957/Linea_yakc2q.png"
-                  alt={item.result}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '99%',
-                    height: '99%',
-                    objectFit: 'cover',
-                    borderRadius: '8px',
-                    zIndex: -1,
-                  }}
-                />
-                <img
-                  src={getImageUrl(item.result)}
-                  alt={item.result}
-                  style={{
-                    width: '100px',
-                    height: '100px',
-                    objectFit: 'contain',
-                    marginBottom: '20px',
-                    zIndex: 1,
-                  }}
-                />
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    flexWrap: 'wrap',
-                    paddingTop: '30px',
-                  }}
-                >
-                  {item.crafting.map((craftItem, index) => {
-                    const imageUrl = getImageUrl(craftItem.element);
-                    return (
-                      <ItemCard
-                        key={index}
-                        item={{
-                          imageUrl: imageUrl,
-                          name: craftItem.element,
-                          quantity: craftItem.quantity,
-                        }}
-                        onMouseEnter={handleMouseEnter}
-                        onMouseLeave={handleMouseLeave}
-                        onClick={handleItemClick} // Agregar evento de clic
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
+  {groupedItems[type].map((item, index) => (
+    <div
+      key={item.id}
+      ref={(el) => { itemRefs.current[item.id] = el }} 
+      style={{
+        position: 'relative',
+        width: '230px',
+        maxHeight: '300px',
+        margin: '20px',
+        textAlign: 'center',
+        border: '1px solid #ccc',
+        borderRadius: '8px',
+        padding: '20px',
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+        transition: 'all 0.3s ease',
+        cursor: 'pointer',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'scale(1.05)';
+        e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 255, 255, 0.7)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'scale(1)';
+        e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
+      }}
+    >
+      <img
+        src="https://res.cloudinary.com/dm94dpmzy/image/upload/v1731988957/Linea_yakc2q.png"
+        alt={item.result}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '99%',
+          height: '99%',
+          objectFit: 'cover',
+          borderRadius: '8px',
+          zIndex: -1,
+        }}
+      />
+      <img
+        src={getImageUrl(item.result)}
+        alt={item.result}
+        style={{
+          width: '100px',
+          height: '100px',
+          objectFit: 'contain',
+          marginBottom: '20px',
+          zIndex: 1,
+        }}
+      />
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-around',
+          flexWrap: 'wrap',
+          paddingTop: '30px',
+        }}
+      >
+        {item.crafting.map((craftItem, index) => {
+          const imageUrl = getImageUrl(craftItem.element);
+          return (
+            <ItemCard
+              key={index}
+              item={{
+                imageUrl: imageUrl,
+                name: craftItem.element,
+                quantity: craftItem.quantity,
+              }}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onClick={handleItemClick} // Agregar evento de clic
+            />
+          );
+        })}
+      </div>
+    </div>
+  ))}
+</div>
+
         </div>
       ))}
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Usamos useNavigate en lugar de useHistory
 import OptionsCard from './OptionsCard'; // Import the new OptionsCard component
 
 const rarityColors = [
@@ -14,8 +15,9 @@ const RecipeDetails = ({ selectedRecipe, closeDetails, urls, imageCSS, hoverColo
   const [selectedCard, setSelectedCard] = useState(null);
   const [tooltip, setTooltip] = useState('');
   const [isVisible, setIsVisible] = useState(false);
+  const navigate = useNavigate(); // Usamos el hook useNavigate para redirigir
 
-  const normalizeName = (name) => name?.trim().toLowerCase().replace(/\s+/g, '') || '';
+  const normalizeName = (name) => name?.trim().toLowerCase() || ''; // Ya no elimina los espacios
   const capitalizeWords = (text) => text.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
   const findImageForElement = (elementName, tier) => {
@@ -30,8 +32,17 @@ const RecipeDetails = ({ selectedRecipe, closeDetails, urls, imageCSS, hoverColo
     setSelectedCard(index);
   };
 
+  // Modificamos el nombre para mantener los espacios y agregar "_black"
+  const handleCraftingClick = (craft) => {
+    if (activeTab === 'craftings') { // Solo permitir clics en los items de crafting
+      const itemNameWithBlack = `${craft.element}`; // Mantiene los espacios y agrega "_black"
+      // Abrir una nueva ventana con la URL generada
+      window.open(`/essence?name=${encodeURIComponent(itemNameWithBlack)}`, '_blank');
+    }
+  };
+
   const renderCards = (itemImage) => {
-    const rarityNames = selectedRecipe.rarity; // The rarity names directly from selectedRecipe
+    const rarityNames = selectedRecipe.rarity;
     return (
       <div style={styles.cardsContainer}>
         {rarityNames.map((rarity, index) => (
@@ -61,6 +72,7 @@ const RecipeDetails = ({ selectedRecipe, closeDetails, urls, imageCSS, hoverColo
               style={styles.craftingItem}
               onMouseEnter={() => setTooltip(craft.element)}
               onMouseLeave={() => setTooltip('')}
+              onClick={() => handleCraftingClick(craft)} // Llamamos a handleCraftingClick
             >
               <img 
                 src={findImageForElement(craft.element)} 
@@ -68,12 +80,10 @@ const RecipeDetails = ({ selectedRecipe, closeDetails, urls, imageCSS, hoverColo
                 style={styles.elementImage} 
               />
               <span>x{craft.quantity}</span>
-              {tooltip === craft.element && (
+              {/* Solo mostrar el tooltip si es de crafting */}
+              {tooltip === craft.element && activeTab === 'craftings' && (
                 <div style={styles.tooltip}>
                   <strong>{capitalizeWords(tooltip)}</strong>
-                  <hr style={styles.tooltipDivider} />
-                  <div style={styles.tooltipTitle}>Crafting</div>
-                  <div style={styles.tooltipSubtitle}>Coming Soon</div>
                 </div>
               )}
             </div>
@@ -399,4 +409,7 @@ const styles = {
 };
 
 export default RecipeDetails;
+
+
+
 
