@@ -270,19 +270,24 @@ const Wikiconsumable = () => {
             justify-content: flex-start;
           }
   
-          .tier-card {
-            background-color: rgba(255, 255, 255, 0.7);
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 20px;
-            font-family: Comic Sans MS, sans-serif;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-left: auto;
-            width: 150px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
+.tier-card {
+  position: absolute;
+  top: 1px;
+  right: 3px;
+  background-color: rgba(255, 255, 255, 0.7);
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0px 0px;
+  font-family: Comic Sans MS, sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
   
           .tier-card h2 {
             font-size: 45px;
@@ -510,18 +515,6 @@ const Wikiconsumable = () => {
         .find-button:focus {
           outline: none;
         }
-
-        .tier-card {
-  position: absolute;
-  top: 1px;
-  right: 1px;
-  background-color: rgba(255, 255, 255, 0.7);
-  color: #333;
-  padding: 1px 0px;
-  font-size: 1rem;
-  border-radius: 4px;
-  font-weight: bold;
-}
       `}</style>
 
 
