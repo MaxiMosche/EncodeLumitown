@@ -49,7 +49,6 @@ const fetchData = async () => {
 };
 
 const DropsCard = ({ drop, isSelected, onClick, cardRef }) => {
-  // Función para determinar el color del tipo
   const getTypeColor = (type) => {
     switch (type) {
       case 'livestock':
@@ -65,15 +64,12 @@ const DropsCard = ({ drop, isSelected, onClick, cardRef }) => {
     }
   };
 
-  // Función para capitalizar la primera letra de cada palabra
   const capitalizeWords = (str, maxLength) => {
-    // Capitalizar las palabras
     const capitalizedStr = str
-      .split(' ') // Dividir la cadena en palabras
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalizar la primera letra
-      .join(' '); // Volver a unir las palabras
-    
-    // Truncar la cadena si es necesario
+      .split(' ') 
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) 
+      .join(' ');
+  
     if (capitalizedStr.length > maxLength) {
       return capitalizedStr.slice(0, maxLength - 3) + '...';
     }
@@ -89,7 +85,7 @@ const DropsCard = ({ drop, isSelected, onClick, cardRef }) => {
     >
       <img src={drop.url} alt={drop.dropName} style={styles.cardImg} />
       <div style={styles.cardBody}>
-        <h5 style={styles.cardTitle}>{capitalizeWords(drop.dropName, 20)}</h5> {/* Aplicar la función capitalizeWords */}
+        <h5 style={styles.cardTitle}>{capitalizeWords(drop.dropName, 20)}</h5>
         <div style={{ ...styles.typeCard, backgroundColor: getTypeColor(drop.type) }}>
           <strong>{drop.type.toUpperCase()}</strong>
         </div>
@@ -109,22 +105,16 @@ const DropsCard = ({ drop, isSelected, onClick, cardRef }) => {
   );
 };
 
-const truncateString = (str, maxLength) => {
-  if (str.length > maxLength) {
-    return str.slice(0, maxLength - 3) + '...';
-  }
-  return str;
-};
-
 const DropsList = () => {
   const [drops, setDrops] = useState([]);
   const [selectedDrop, setSelectedDrop] = useState(null);
+  const [filteredType, setFilteredType] = useState(''); // Estado para el tipo filtrado
+  const [searchQuery, setSearchQuery] = useState('');  // Estado para el filtro por nombre
   const navigate = useNavigate();
-  const location = useLocation();  // Obtén el objeto location de la URL
+  const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const nameFromUrl = queryParams.get('name');
   
-  // Crear una referencia para cada tarjeta
   const cardRefs = useRef([]);
 
   useEffect(() => {
@@ -151,7 +141,6 @@ const DropsList = () => {
       }
     });
 
-    // Cambiar el fondo de la página
     document.body.style.backgroundColor = '#09132c'; 
     document.body.style.backgroundImage = 'url("https://res.cloudinary.com/dm94dpmzy/image/upload/v1731964105/wiki_home_sbsqrw.webp")';
     document.body.style.backgroundSize = 'cover';
@@ -164,9 +153,8 @@ const DropsList = () => {
     if (nameFromUrl) {
       const dropToSelect = drops.find(drop => drop.dropName === nameFromUrl);
       if (dropToSelect) {
-        setSelectedDrop(dropToSelect.dropName);  // Establecer la tarjeta seleccionada
+        setSelectedDrop(dropToSelect.dropName);
 
-        // Desplazar automáticamente hacia la tarjeta seleccionada
         const selectedCardIndex = drops.findIndex(drop => drop.dropName === nameFromUrl);
         if (cardRefs.current[selectedCardIndex]) {
           cardRefs.current[selectedCardIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -177,11 +165,17 @@ const DropsList = () => {
 
   const handleCardClick = (dropName) => {
     if (selectedDrop === dropName) {
-      setSelectedDrop(null);  // Si ya está seleccionado, lo deseleccionamos
+      setSelectedDrop(null);
     } else {
-      setSelectedDrop(dropName);  // Seleccionar la tarjeta
+      setSelectedDrop(dropName);
     }
   };
+
+  const filteredDrops = drops.filter(drop => {
+    const matchesType = filteredType ? drop.type.toLowerCase() === filteredType.toLowerCase() : true;
+    const matchesName = drop.dropName.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesType && matchesName;
+  });
 
   return (
     <div style={styles.container}>
@@ -192,15 +186,37 @@ const DropsList = () => {
       >
         &lt;
       </button>
+      <div style={styles.filters}>
+      <div style={styles.selectWrapper}>
+  <select
+    value={filteredType}
+    onChange={(e) => setFilteredType(e.target.value)}
+    style={styles.select}
+  >
+    <option value="">Filter by type</option>
+    <option value="planting">Planting</option>
+    <option value="gathering">Gathering</option>
+    <option value="livestock">Livestock</option>
+    <option value="combat">Combat</option>
+  </select>
+</div>
 
+        <input 
+          type="text" 
+          placeholder="Search by name..." 
+          value={searchQuery} 
+          onChange={(e) => setSearchQuery(e.target.value)} 
+          style={styles.searchInput}
+        />
+      </div>
       <div style={styles.dropsContainer}>
-        {drops.map((drop, index) => (
+        {filteredDrops.map((drop, index) => (
           <DropsCard 
             key={index} 
             drop={drop} 
             isSelected={selectedDrop === drop.dropName} 
             onClick={() => handleCardClick(drop.dropName)} 
-            cardRef={(el) => cardRefs.current[index] = el} // Asignar el ref de cada tarjeta
+            cardRef={(el) => cardRefs.current[index] = el}
           />
         ))}
       </div>
@@ -306,6 +322,69 @@ const styles = {
     alignItems: 'center',
     transition: 'background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease',
     boxShadow: '0 8px 16px rgba(0, 0, 0, 0.8)', // Sombra más pronunciada y difusa
+  },
+  filtersWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',  // Hacer que se centren verticalmente en toda la pantalla
+    position: 'absolute',
+    top: '0',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: '10',
+    width: '100%',
+    padding: '20px',
+    boxSizing: 'border-box',
+  },
+  filters: {
+    display: 'flex',
+    marginTop:'15px',
+    marginBottom:'15px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '20px',
+    padding: '10px 20px',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', 
+    borderRadius: '15px',
+    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.8)',
+    transition: 'all 0.3s ease',
+  },
+
+
+  select: {
+    padding: '10px 15px',
+    fontSize: '16px',
+    width:'200px',
+    backgroundColor: 'white',  // Fondo oscuro para que combine con el tema
+    color: '#333',  // Texto blanco
+    border: '2px solid #3498db', // Borde azul para destacar
+    borderRadius: '5px',
+    outline: 'none',  // Remueve el contorno predeterminado
+    transition: 'border-color 0.3s ease, background-color 0.3s ease',
+    outline: 'none',
+    appearance: 'none',  // Elimina la flecha en la mayoría de los navegadores
+    WebkitAppearance: 'none', // Para Chrome/Safari
+    MozAppearance: 'none',  // Para Firefox
+    position: 'relative',  // Necesario para colocar un icono si lo deseas
+    cursor: 'pointer',
+    textAlign: 'left',
+  },
+  searchInput: {
+    padding: '10px 15px',
+    fontSize: '16px',
+    width: '200px',
+    backgroundColor: 'transparent',
+    color: 'white',
+    border: '2px solid #fff',
+    borderRadius: '5px',
+    transition: 'border-color 0.3s ease',
+    outline: 'none',
+  },
+  dropsContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '20px',
   },
 };
 
