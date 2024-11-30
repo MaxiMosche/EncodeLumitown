@@ -23,12 +23,6 @@ const Wikiconsumable = () => {
     document.body.style.backgroundPosition = 'center';
     document.body.style.backgroundAttachment = 'fixed';
     document.body.style.backgroundRepeat = 'no-repeat';
-
-    document.body.style.display = 'flex';
-    document.body.style.justifyContent = 'center';
-    document.body.style.alignItems = 'flex-start';
-    document.body.style.minHeight = '100vh';
-    document.body.style.margin = '0';
   }, []);
 
   const getImageUrl = (elementName) => {
