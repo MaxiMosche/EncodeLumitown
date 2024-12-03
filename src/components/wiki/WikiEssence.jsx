@@ -118,18 +118,13 @@ const WikiEssence = () => {
   }, []);
 
   useEffect(() => {
-    console.log(location.search);
     if (location.search && getList.length > 0) {
       const searchName = new URLSearchParams(location.search).get('name');
       if (searchName) {
         const item = getList.find(item => item.result.toLowerCase() === searchName.toLowerCase());
         const itemId = item?.id; // Obtenemos el id del ítem encontrado
-        console.log('itemId:', itemId); // Verifica el id del ítem
   
-        if (itemId) {
-          console.log('itemRefs.current:', itemRefs.current); // Verifica si todas las refs están correctamente asignadas
-          console.log('itemRefs.current[itemId]:', itemRefs.current[itemId]); // Verifica el ref del ítem
-  
+        if (itemId) { 
           // Asegúrate de que el ref existe
           if (itemRefs.current[itemId]) {
             // Realiza el scroll
@@ -139,7 +134,8 @@ const WikiEssence = () => {
             });
   
             // Resalta la tarjeta si quieres
-            itemRefs.current[itemId].style.backgroundColor = '#f0f0f0';
+            itemRefs.current[itemId].style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+            itemRefs.current[itemId].style.boxShadow = '0px 0px 20px 10px rgba(255, 255, 255)';
           } else {
             console.log('El ref no está asignado para el ítem con id:', itemId);
           }

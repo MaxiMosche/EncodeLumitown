@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
+import { point } from 'leaflet';
+import { BorderClear, BorderColor } from '@mui/icons-material';
 
-const secretKey = process.env.REACT_APP_AES_SECRET_KEY;
-const iv = process.env.REACT_APP_AES_IV;
+const secretKey = "A9F1A8D0C8A5A6E6B0B9F1C1D6B9E3D1";  // La clave secreta AES
+const iv = "B6D7A9F1C3E9A2F0";  // El IV AES
 
 const decryptData = (encryptedData) => {
   try {
@@ -179,14 +181,7 @@ const DropsList = () => {
 
   return (
     <div style={styles.container}>
-      <button 
-        className="back-button" 
-        onClick={() => navigate('/homewiki')} 
-        style={styles.backButton}
-      >
-        &lt;
-      </button>
-      <div style={styles.filters}>
+            <div style={styles.filters}>
       <div style={styles.selectWrapper}>
   <select
     value={filteredType}
@@ -209,6 +204,13 @@ const DropsList = () => {
           style={styles.searchInput}
         />
       </div>
+      <button 
+        className="back-button" 
+        onClick={() => navigate('/homewiki')} 
+        style={styles.backButton}
+      >
+        &lt;
+      </button>
       <div style={styles.dropsContainer}>
         {filteredDrops.map((drop, index) => (
           <DropsCard 
@@ -235,6 +237,7 @@ const styles = {
     flexWrap: 'wrap',
     justifyContent: 'center',
     gap: '20px',
+    display: 'flex'
   },
   card: {
     border: '1px solid #ccc',
@@ -307,13 +310,14 @@ const styles = {
     marginTop: '5px',
   },
   backButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     color: 'white',
     marginLeft: '20px',
-    marginTop: '20px',
-    width: '60px',
-    height: '60px',
-    border: 'none',
+    marginTop: '-55px',
+    marginBottom: '20px',
+    width: '50px',
+    height: '50px',
+    border: '1px solid white',
     fontSize: '40px',
     cursor: 'pointer',
     borderRadius: '50%',
@@ -339,8 +343,8 @@ const styles = {
   },
   filters: {
     display: 'flex',
-    marginTop:'15px',
-    marginBottom:'15px',
+    marginTop:'0',
+    marginBottom:'0px',
     justifyContent: 'center',
     alignItems: 'center',
     gap: '20px',

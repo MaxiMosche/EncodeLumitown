@@ -289,6 +289,7 @@ const styles = {
     alignItems: 'center',
     position: 'relative',
     maxWidth: '100px',
+    cursor:'pointer'
   },
   elementImage: {
     width: '70px',
