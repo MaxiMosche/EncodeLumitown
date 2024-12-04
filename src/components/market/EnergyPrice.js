@@ -289,7 +289,7 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
       const totalCostUSD = totalCostLUA * lumiPrice;
 
       setEstimatedCostLUA(totalCostLUA.toFixed(4));
-      setEstimatedCostUSD(totalCostUSD.toFixed(2));
+      setEstimatedCostUSD(totalCostUSD.toFixed(4));
     } else {
       setEstimatedCostLUA(0);
       setEstimatedCostUSD(0);
@@ -392,11 +392,11 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
                 <div style={tooltipStyle}>
                   <div style={{ marginBottom: '8px' }}>
                     <strong>Total:</strong> (~$
-                    {applyMarketFee(convertToUSD(card.price)).toFixed(2)} USD)
+                    {applyMarketFee(convertToUSD(card.price)).toFixed(4)} USD)
                   </div>
                   <div>
                     <strong>E/$:</strong> (~$
-                    {applyMarketFee(convertToUSD(card.costPerEnergy)).toFixed(2)} USD)
+                    {applyMarketFee(convertToUSD(card.costPerEnergy)).toFixed(4)} USD)
                   </div>
                   <div style={tooltipArrowStyle}></div>
                 </div>
