@@ -496,7 +496,7 @@ const MarketItems = ({ items }) => {
                 {hoveredItem === item.name && (
                   <div className="tooltip">
                     <div style={{ marginBottom: '8px' }}>
-                      <strong>Crafting Cost:</strong> {craftingCostLUA} LUA
+                      <strong>Crafting Cost:</strong> ~${craftingCostLUA} USD
                     </div>
                     <div>
                       <strong>Total:</strong> ~${craftingCostUSD} USD
@@ -539,10 +539,7 @@ const MarketItems = ({ items }) => {
               </div>
               <div className="cart-totals">
                 <p>
-                  <strong>Total Purchase:</strong> {totalPurchase.toFixed(4)}
-                </p>
-                <p>
-                  <strong>Total Crafting:</strong> ${totalCrafting.toFixed(2)}
+                  <strong>Total:</strong> ${totalCrafting.toFixed(2)}
                 </p>
                 <button className="clear-button" onClick={handleClearCart}>
                   Clear Cart
@@ -557,4 +554,6 @@ const MarketItems = ({ items }) => {
 };
 
 export default MarketItems;
+
+
 
