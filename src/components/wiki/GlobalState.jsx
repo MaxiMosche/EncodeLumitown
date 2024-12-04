@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';  // Importa useLocation
-import CryptoJS from 'crypto-js';  
+import CryptoJS from 'crypto-js';
+import config from '../config'; 
 
 const GlobalStateContext = createContext();
 
@@ -56,7 +57,7 @@ export const GlobalStateProvider = ({ children }) => {
           setIsLoading(true);
           try {
             // Obtener la primera página para saber cuántas páginas hay
-            const firstPageResponse = await fetch(`https://lumitownserver.somee.com/GetListRepice/1`);
+            const firstPageResponse = await fetch(`${config.API_BASE_URL}/GetListRepice/1`);
             const firstPageData = await firstPageResponse.json();
             const encryptedData = firstPageData.data;
             const decryptedData = decryptData(encryptedData);
@@ -65,7 +66,7 @@ export const GlobalStateProvider = ({ children }) => {
 
             // Obtener las recetas de todas las páginas
             for (let page = 2; page <= totalPages; page++) {
-              const response = await fetch(`https://lumitownserver.somee.com/GetListRepice/${page}`);
+              const response = await fetch(`${config.API_BASE_URL}/GetListRepice/${page}`);
               const data = await response.json();
               const encryptedData = data.data;
               const decryptedData = decryptData(encryptedData);
@@ -75,7 +76,7 @@ export const GlobalStateProvider = ({ children }) => {
             setRecipes(allRecipes);
 
             // Obtener las URLs de los elementos
-            const urlsResponse = await fetch(`https://lumitownserver.somee.com/GetUrl`);
+            const urlsResponse = await fetch(`${config.API_BASE_URL}/GetUrl`);
             const urlsData = await urlsResponse.json();
             const encryptedDataUrl = urlsData.data;
             const decryptedDataUrl = decryptData(encryptedDataUrl);

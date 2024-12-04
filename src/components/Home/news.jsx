@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ResponsiveTitle from './ResponsiveTitle';
+import config from '../config'; 
 
 const TarjetasNoticias = ({ onCardClick }) => {
     const [detallesTarjetas, setDetallesTarjetas] = useState([]);
@@ -10,7 +11,7 @@ const TarjetasNoticias = ({ onCardClick }) => {
     // Función para obtener las noticias desde el endpoint
     const obtenerNoticias = async () => {
         try {
-            const response = await fetch('https://lumitownserver.somee.com/GetListNews');
+            const response = await fetch(`${config.API_BASE_URL}/GetListNews`);
             const data = await response.json();
             // Asignar id mayor a 10000
             const tarjetasConId = data.map((tarjeta, index) => ({

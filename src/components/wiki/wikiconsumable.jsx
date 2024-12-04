@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PresentationCard from './PresentationCard';
+import config from '../config'; 
 
 const Wikiconsumable = () => {
   const [recipes, setRecipes] = useState([]);
@@ -9,11 +10,11 @@ const Wikiconsumable = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('https://www.lumitown.somee.com/GetListRepiceConsumable')
+    fetch(`${config.API_BASE_URL}/GetListRepiceConsumable`)
       .then((response) => response.json())
       .then((data) => setRecipes(data));
 
-    fetch('https://www.lumitown.somee.com/GetUrlConsumable')
+    fetch(`${config.API_BASE_URL}/GetUrlConsumable`)
       .then((response) => response.json())
       .then((data) => setImages(data));
 

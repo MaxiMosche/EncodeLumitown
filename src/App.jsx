@@ -17,9 +17,8 @@ import { SignalRProvider } from './components/market/SignalRContext';
 
 function App() {
   return (
+    <SignalRProvider>
     <GlobalStateProvider>
-      {/* Envuelve con SignalRProvider para que el contexto esté disponible */}
-      <SignalRProvider>
         <Topbar>
           <Analytics />
           <Routes>
@@ -35,8 +34,8 @@ function App() {
             <Route path="/lumitow-info" element={<LumitowInfo />} /> {/* Nueva ruta para LumitowInfo */}
           </Routes>
         </Topbar>
-      </SignalRProvider>
     </GlobalStateProvider>
+    </SignalRProvider>
   );
 }
 

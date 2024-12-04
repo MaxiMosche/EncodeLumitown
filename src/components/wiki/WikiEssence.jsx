@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Tooltip from './Tooltip';
-
+import config from '../config';
 const ItemCard = ({ item, onMouseEnter, onMouseLeave, onClick }) => {
   return (
     <div
@@ -91,7 +91,7 @@ const WikiEssence = () => {
 
     const fetchGetList = async () => {
       try {
-        const response = await fetch('https://www.lumitown.somee.com/GetListRepiceEssence');
+        const response = await fetch(`${config.API_BASE_URL}/GetListRepiceEssence`);
         const data = await response.json();
         setGetList(data);
       } catch (error) {
@@ -101,7 +101,7 @@ const WikiEssence = () => {
 
     const fetchUrlList = async () => {
       try {
-        const response = await fetch('https://www.lumitown.somee.com/GetUrlEssence');
+        const response = await fetch(`${config.API_BASE_URL}/GetUrlEssence`);
         const data = await response.json();
         setUrlList(data);
       } catch (error) {
