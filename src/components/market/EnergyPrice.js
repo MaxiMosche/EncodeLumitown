@@ -49,7 +49,7 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
     const validFee = parseFloat(fee) || 0;
     const validEnergy = parseFloat(energyObtain) || 1;
 
-    const multiplier = name && name.toLowerCase().includes('lv 1') ? 3.5 : 4;
+    const multiplier = name && name.toLowerCase().includes('lv 1') ? 3.5 : 3;
     const energyAdjusted = validEnergy * multiplier;
     const finalPrice = applyMarketFee(craftingTotal + validFee);
     return {
