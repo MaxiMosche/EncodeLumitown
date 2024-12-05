@@ -5,11 +5,8 @@ import { point } from 'leaflet';
 import { BorderClear, BorderColor } from '@mui/icons-material';
 import config from '../config'; 
 
-//const secretKey = process.env.REACT_APP_AES_SECRET_KEY;
-//const iv = process.env.REACT_APP_AES_IV;
-
-const secretKey = "A9F1A8D0C8A5A6E6B0B9F1C1D6B9E3D1"; 
-const iv = "B6D7A9F1C3E9A2F0";
+const secretKey = process.env.REACT_APP_AES_SECRET_KEY;
+const iv = process.env.REACT_APP_AES_IV;
 
 const decryptData = (encryptedData) => {
   try {
