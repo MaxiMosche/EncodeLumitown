@@ -11,8 +11,8 @@ export const GlobalStateProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();  // Obtiene la ruta actual
 
-  const secretKey = "A9F1A8D0C8A5A6E6B0B9F1C1D6B9E3D1";  // La clave secreta AES
-  const iv = "B6D7A9F1C3E9A2F0";  // El IV AES
+const secretKey = process.env.REACT_APP_AES_SECRET_KEY;
+const iv = process.env.REACT_APP_AES_IV;
 
   // Función para desencriptar los datos
   const decryptData = (encryptedData) => {
