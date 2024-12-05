@@ -57,25 +57,17 @@ const PresentationCard = ({ images }) => {
 
   // Funciones para obtener URLs de imágenes
   const getPotionImageUrl = (potionName) => {
-    if (!images || !Array.isArray(images)) {
-      console.warn('La prop "images" no está definida o no es un arreglo.');
-      return '';
-    }
     const image = images.find(
       (img) => img.name.toLowerCase() === potionName.toLowerCase()
     );
-    return image ? image.url : '';
+    return image ? image.url : 'https://via.placeholder.com/80';
   };
 
   const getEmptyBottleImageUrl = () => {
-    if (!images || !Array.isArray(images)) {
-      console.warn('La prop "images" no está definida o no es un arreglo.');
-      return '';
-    }
     const emptyBottleImage = images.find(
       (img) => img.name.toLowerCase() === 'empty bottle'
     );
-    return emptyBottleImage ? emptyBottleImage.url : '';
+    return emptyBottleImage ? emptyBottleImage.url : 'https://via.placeholder.com/20';
   };
 
   // Función para alternar la visibilidad del contenido
@@ -83,96 +75,46 @@ const PresentationCard = ({ images }) => {
     setIsOpen(!isOpen);
   };
 
-  // Inserción de la animación 'pulse' una sola vez
-  useEffect(() => {
-    if (typeof document !== 'undefined') {
-      const styleSheet = document.styleSheets[0];
-      const pulseAnimation = `
-        @keyframes pulse {
-          0% {
-            transform: scale(1);
-            opacity: 1;
-          }
-          50% {
-            transform: scale(1.1);
-            opacity: 0.8;
-          }
-          100% {
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
-      `;
-      // Verificar si la animación ya existe
-      const pulseExists = Array.from(styleSheet.cssRules).some(
-        (rule) => rule.type === CSSRule.KEYFRAMES_RULE && rule.name === 'pulse'
-      );
-      if (!pulseExists) {
-        styleSheet.insertRule(pulseAnimation, styleSheet.cssRules.length);
-      }
-    }
-  }, []);
-
   return (
     <div style={styles.container}>
-      {/* Botón para alternar la visibilidad con diseño mejorado */}
-      {isOpen && (
-        <button
-          style={{
-            ...styles.toggleButton,
-            backgroundColor: isOpen ? 'rgba(30, 144, 255, 0.9)' : '#333',
-            transform: isOpen ? 'scale(1.05)' : 'scale(1)',
-          }}
-          onClick={toggleOpen}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = isOpen ? 'rgba(30, 144, 255, 1)' : '#555';
-            e.currentTarget.style.transform = 'scale(1.07)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = isOpen ? 'rgba(30, 144, 255, 0.9)' : '#333';
-            e.currentTarget.style.transform = 'scale(1)';
-          }}
-        >
-          {/* Contenido Condicional */}
-          {isOpen ? (
-            <div style={styles.toggleContainer}>
-              <span style={styles.toggleIcon}>🔼</span>
-              <span>Hide Potions</span>
-            </div>
-          ) : null}
-        </button>
-      )}
-      {/* Encabezado cuando la tarjeta está cerrada */}
-      {!isOpen && (
-        <div style={styles.closedHeader} onClick={toggleOpen}>
-          <img
-            src="https://res.cloudinary.com/dm94dpmzy/image/upload/v1732928973/Pngtreeblue_game_energy_lightning_material_4380766_vinfht.png"
-            alt="Energy Icon"
-            style={styles.headerIcon}
-          />
-          <h2 style={styles.headerTitle}>Energy Potions</h2>
-        </div>
-      )}
+      {/* Encabezado con botón toggle */}
+      <div style={styles.header} onClick={toggleOpen}>
+        <img
+          src="https://res.cloudinary.com/dm94dpmzy/image/upload/v1732928973/Pngtreeblue_game_energy_lightning_material_4380766_vinfht.png"
+          alt="Energy Icon"
+          style={styles.headerIcon}
+        />
+        <h2 style={styles.headerTitle}>Energy Potions</h2>
+        <img
+          src={
+            isOpen
+              ? 'https://img.icons8.com/ios-filled/24/ffffff/collapse-arrow.png'
+              : 'https://img.icons8.com/ios-filled/24/ffffff/expand-arrow.png'
+          }
+          alt="Toggle Icon"
+          style={styles.chevronIcon}
+        />
+      </div>
 
-      {/* Contenido de las pociones con animaciones */}
+      {/* Contenido de las pociones */}
       <div
         style={{
           ...styles.cardsContainer,
-          maxHeight: isOpen ? '1000px' : '0', // Aumentado para acomodar tarjetas más grandes
+          maxHeight: isOpen ? '1000px' : '0',
           opacity: isOpen ? '1' : '0',
-          transition: 'max-height 0.5s ease, opacity 0.5s ease',
+          padding: isOpen ? '20px' : '0 20px',
         }}
       >
         {potions.map((potion, index) => (
           <div key={index} style={styles.potionCard}>
             {/* Tarjeta para el título principal y la imagen */}
             <div style={styles.titleCard}>
-              <h3 style={styles.potionName}>{potion.nameitem}</h3>
               <img
                 src={getPotionImageUrl(potion.nameitem)}
                 alt={potion.nameitem}
                 style={styles.mainPotionImage}
               />
+              <h3 style={styles.potionName}>{potion.nameitem}</h3>
             </div>
 
             <div style={styles.potionDetails}>
@@ -184,16 +126,14 @@ const PresentationCard = ({ images }) => {
                   onMouseEnter={() => setActiveEnergyTooltip(index)}
                   onMouseLeave={() => setActiveEnergyTooltip(null)}
                 >
-                  <span style={styles.energyText}>
-                    {potion.energyPerBottele}
-                  </span>
                   <img
                     src="https://res.cloudinary.com/dm94dpmzy/image/upload/v1732928973/Pngtreeblue_game_energy_lightning_material_4380766_vinfht.png"
                     alt="Energy Icon"
                     style={styles.energyIcon}
                   />
+                  <span style={styles.energyText}>{potion.energyPerBottele}</span>
                   {activeEnergyTooltip === index && (
-                    <div style={styles.tooltip}>Amount of energy per bottle</div>
+                    <div style={styles.tooltip}>Energy Per Bottle</div>
                   )}
                 </div>
 
@@ -206,11 +146,11 @@ const PresentationCard = ({ images }) => {
                   <img
                     src={getEmptyBottleImageUrl()}
                     alt="Empty Bottle"
-                    style={styles.emptyBottleIcon}
+                    style={styles.quantityIcon}
                   />
                   <span style={styles.quantityText}>{potion.rangueCount}</span>
                   {activeQuantityTooltip === index && (
-                    <div style={styles.tooltip}>Number of potion bottles</div>
+                    <div style={styles.tooltip}>Number Of Potion Bottles</div>
                   )}
                 </div>
               </div>
@@ -218,6 +158,33 @@ const PresentationCard = ({ images }) => {
           </div>
         ))}
       </div>
+
+      {/* Estilos del componente */}
+      <style jsx>{`
+        @keyframes pulse {
+          0% {
+            transform: scale(1);
+            opacity: 1;
+          }
+          50% {
+            transform: scale(1.05);
+            opacity: 0.8;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+      `}</style>
     </div>
   );
 };
@@ -242,164 +209,148 @@ const styles = {
   container: {
     width: '90%',
     margin: '20px auto',
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     color: '#fff',
     textAlign: 'center',
-    padding: '25px 15px',
-    borderRadius: '20px',
-    boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.3)',
-    position: 'relative',
-    fontFamily: 'Arial, sans-serif',
-    backdropFilter: 'blur(10px)',
+    borderRadius: '15px',
+    boxShadow: '0px 8px 25px rgba(0, 0, 0, 0.3)',
+    backdropFilter: 'blur(15px)',
+    transition: 'all 0.3s ease',
+    fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif',
   },
-  toggleButton: {
-    backgroundColor: '#333',
-    color: '#fff',
-    border: 'none',
-    padding: '12px 25px',
-    borderRadius: '25px',
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '15px 20px',
     cursor: 'pointer',
-    fontSize: '1.1rem',
-    marginBottom: '25px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease',
-    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-  },
-  toggleIcon: {
-    marginRight: '10px',
-    fontSize: '1.4rem',
-  },
-  closedHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: '25px',
-    padding: '15px 25px',
+    userSelect: 'none',
     background: 'linear-gradient(135deg, #1e90ff, #00bfff)',
-    borderRadius: '35px',
-    boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.2)',
-    transition: 'transform 0.3s ease',
-    cursor: 'pointer',
+    borderTopLeftRadius: '15px',
+    borderTopRightRadius: '15px',
+    transition: 'background 0.3s ease',
   },
   headerIcon: {
-    width: '50px',
-    height: '50px',
-    marginRight: '15px',
+    width: '30px',
+    height: '30px',
     animation: 'pulse 2s infinite',
   },
   headerTitle: {
-    fontSize: '1.8rem',
-    color: '#fff',
-    fontFamily: '"Comic Sans MS", cursive, sans-serif',
-    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)',
+    fontSize: '1.5rem',
+    margin: '0 10px',
+    flexGrow: 1,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    textShadow: '1px 1px 3px rgba(0,0,0,0.5)',
+  },
+  chevronIcon: {
+    width: '20px',
+    height: '20px',
   },
   cardsContainer: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-    gap: '25px',
-    justifyItems: 'center',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+    gap: '15px',
+    padding: '0 20px',
     overflow: 'hidden',
+    transition: 'max-height 0.5s ease, opacity 0.5s ease, padding 0.5s ease',
   },
   potionCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     padding: '15px',
-    borderRadius: '20px',
-    boxShadow: '0px 6px 20px rgba(0, 0, 0, 0.2)',
+    borderRadius: '12px',
+    boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.2)',
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
     textAlign: 'center',
     position: 'relative',
-    maxWidth: '220px',
-    width: '100%',
+  },
+  potionCardHover: {
+    transform: 'scale(1.05)',
+    boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.3)',
   },
   titleCard: {
-    width: '100%',
-    margin: '0 auto',
-    textAlign: 'center',
+    marginBottom: '10px',
   },
   potionName: {
-    fontSize: '0.8rem',
+    fontSize: '0.9rem',
     fontWeight: 'bold',
-    marginBottom: '8px',
-    fontFamily: '"Comic Sans MS", cursive, sans-serif',
+    marginTop: '8px',
     color: '#fff',
-    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)',
+    textShadow: '1px 1px 2px rgba(0,0,0,0.3)',
   },
   mainPotionImage: {
-    width: '100%',
-    height: 'auto',
-    marginTop: '8px',
-    borderRadius: '12px',
+    width: '80px',
+    height: '80px',
+    objectFit: 'cover',
+    borderRadius: '10px',
     transition: 'transform 0.3s ease',
   },
   potionDetails: {
     fontSize: '0.8rem',
-    margin: '8px 0',
+    marginTop: '8px',
     color: '#d1d1d1',
   },
   flexContainer: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginTop: '8px',
   },
   energyCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    padding: '6px 10px',
-    borderRadius: '12px',
+    backgroundColor: 'rgba(30, 144, 255, 0.9)',
+    padding: '8px 12px',
+    borderRadius: '10px',
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
     position: 'relative',
     transition: 'background-color 0.3s ease, transform 0.3s ease',
-    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
   },
   quantityCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    padding: '6px 10px',
-    borderRadius: '12px',
+    backgroundColor: 'rgba(34, 139, 34, 0.9)',
+    padding: '8px 12px',
+    borderRadius: '10px',
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
     position: 'relative',
     transition: 'background-color 0.3s ease, transform 0.3s ease',
-    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
+  },
+  energyIcon: {
+    width: '18px',
+    height: '18px',
+    marginRight: '6px',
+  },
+  quantityIcon: {
+    width: '18px',
+    height: '18px',
+    marginRight: '6px',
   },
   energyText: {
-    fontSize: '1rem',
-    color: '#1e90ff',
-    marginRight: '6px',
+    fontSize: '0.9rem',
+    color: '#fff',
     fontWeight: 'bold',
   },
   quantityText: {
-    fontSize: '1rem',
-    color: '#1e90ff',
-    marginLeft: '6px',
+    fontSize: '0.9rem',
+    color: '#fff',
     fontWeight: 'bold',
-  },
-  energyIcon: {
-    width: '20px',
-    height: '20px',
-  },
-  emptyBottleIcon: {
-    width: '20px',
-    height: '20px',
   },
   tooltip: {
     position: 'absolute',
     top: '-35px',
     left: '50%',
     transform: 'translateX(-50%)',
-    backgroundColor: '#333',
+    backgroundColor: 'rgba(0,0,0,0.8)',
     color: '#fff',
-    padding: '6px 12px',
+    padding: '6px 10px',
     borderRadius: '8px',
-    fontSize: '0.8rem',
+    fontSize: '0.75rem',
     whiteSpace: 'nowrap',
     zIndex: 10,
-    opacity: '1',
-    transition: 'opacity 0.3s ease',
-    pointerEvents: 'none',
+    opacity: '0',
+    animation: 'fadeIn 0.3s forwards',
   },
 };
 

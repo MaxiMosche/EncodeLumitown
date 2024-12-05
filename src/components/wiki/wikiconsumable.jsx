@@ -219,7 +219,7 @@ const Wikiconsumable = () => {
             padding: 20px;
             margin-top: -60px;
             justify-content: center; /* Centra los elementos de izquierda a derecha */
-            width: 97%; /* Asegura que ocupe todo el ancho disponible */
+            width: 95%; /* Asegura que ocupe todo el ancho disponible */
             display: flex;
           }
   
@@ -322,7 +322,8 @@ const Wikiconsumable = () => {
             background-color: rgba(255, 255, 255, 0.4);
             border-radius: 8px;
             padding: 20px;
-            width: 200px;
+            width: 230px;
+            height: 290px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
           }
@@ -335,12 +336,12 @@ const Wikiconsumable = () => {
           .main-image {
             display: flex;
             justify-content: center;
-            margin-bottom: 10px;
+            margin-top: 20px;
           }
   
           .main-item-image {
-            width: 70px;
-            height: 70px;
+            width: 110px;
+            height: 110px;
             object-fit: cover;
             border-radius: 5px;
             transition: transform 0.3s ease;
@@ -358,8 +359,9 @@ const Wikiconsumable = () => {
           }
   
           .item-card {
-            width: 40px;
-            height: 40px;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 0px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -387,11 +389,11 @@ const Wikiconsumable = () => {
             position: absolute;
             bottom: 0;
             right: 0;
-            font-size: 12px;
+            font-size: 18px;
             color: #333;
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
-            padding: 2px 5px;
+            padding: 3px 7px;
             border-radius: 3px;
           }
   

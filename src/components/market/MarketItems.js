@@ -147,8 +147,10 @@ const MarketItems = ({ items }) => {
           padding: 2rem;
           box-sizing: border-box;
           position: relative;
-          font-family: Arial, sans-serif;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           gap: 2rem;
+          background: #f5f7fa;
+          min-height: 100vh;
         }
 
         /* Notification */
@@ -158,51 +160,59 @@ const MarketItems = ({ items }) => {
           right: 20px;
           background-color: #4BB543;
           color: #fff;
-          padding: 10px 20px;
-          border-radius: 5px;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+          padding: 12px 24px;
+          border-radius: 8px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.2);
           z-index: 1000;
           animation: fadein 0.5s, fadeout 0.5s 2.5s;
+          font-weight: 500;
         }
 
         @keyframes fadein {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from { opacity: 0; transform: translateY(-20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeout {
-          from { opacity: 1; }
-          to { opacity: 0; }
+          from { opacity: 1; transform: translateY(0); }
+          to { opacity: 0; transform: translateY(-20px); }
         }
 
         /* Filters */
         .filters-container {
           padding: 1rem;
-          background: #f0f4f8;
-          border-radius: 8px;
-          box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+          background: #ffffff;
+          border-radius: 10px;
+          box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
           display: flex;
-          gap: 10px;
+          gap: 12px;
           flex-wrap: wrap;
           justify-content: center;
-          max-width: 600px;
+          max-width: 700px;
           margin: 0 auto;
         }
 
         .filter-button {
-          padding: 0.5rem 1.5rem;
-          border: 1px solid #ccc;
-          border-radius: 5px;
-          background: white;
-          color: #0066B3;
+          padding: 0.6rem 1.8rem;
+          border: none;
+          border-radius: 30px;
+          background: #e0e7ff;
+          color: #4f46e5;
           cursor: pointer;
-          transition: background 0.3s, color 0.3s;
+          transition: background 0.3s, color 0.3s, transform 0.2s;
           font-size: 14px;
+          font-weight: 500;
+        }
+
+        .filter-button:hover {
+          background: #d4d9ff;
+          transform: translateY(-2px);
         }
 
         .filter-button.active {
-          background: #0066B3;
+          background: #4f46e5;
           color: white;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         /* Content Area */
@@ -223,35 +233,36 @@ const MarketItems = ({ items }) => {
 
         /* Item Card */
         .item-card {
-          border: 1px solid #ccc;
+          position: relative; /* Ensure absolute children are positioned relative to the card */
+          border: none;
           padding: 1rem;
-          border-radius: 8px;
-          background: #f9f9f9;
-          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-          position: relative;
+          border-radius: 12px;
+          background: #ffffff;
+          box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.1);
           display: flex;
           flex-direction: column;
           align-items: center;
-          justify-content: center;
-          height: 220px;
+          justify-content: center; /* Center content vertically */
+          height: 180px; /* Reduced height */
           cursor: pointer;
-          transition: transform 0.2s, box-shadow 0.2s;
+          transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .item-card:hover {
-          transform: scale(1.05);
-          box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+          transform: translateY(-5px) scale(1.02);
+          box-shadow: 0px 8px 22px rgba(0, 0, 0, 0.2);
         }
 
         .level-label {
           position: absolute;
           top: 10px;
           right: 10px;
-          background: #007bff;
+          background: #ff7f50;
           color: white;
           padding: 5px 10px;
-          border-radius: 5px;
+          border-radius: 20px;
           font-size: 12px;
+          font-weight: 600;
         }
 
         .item-image {
@@ -259,6 +270,7 @@ const MarketItems = ({ items }) => {
           height: 60px;
           object-fit: cover;
           margin-bottom: 10px;
+          display: block;
         }
 
         .price-container {
@@ -267,7 +279,7 @@ const MarketItems = ({ items }) => {
           left: 10px;
           display: flex;
           align-items: center;
-          gap: 5px;
+          gap: 8px;
         }
 
         .price-icon {
@@ -278,6 +290,7 @@ const MarketItems = ({ items }) => {
         .price-text {
           margin: 0;
           font-size: 14px;
+          font-weight: 600;
         }
 
         /* Tooltip */
@@ -285,18 +298,18 @@ const MarketItems = ({ items }) => {
           visibility: hidden;
           background-color: rgba(58, 58, 58, 0.95);
           color: #fff;
-          text-align: center;
+          text-align: left;
           border-radius: 8px;
-          padding: 12px;
+          padding: 10px;
           position: absolute;
           z-index: 1;
           bottom: 100%;
           left: 50%;
           transform: translateX(-50%);
-          width: 260px;
+          width: 250px;
           opacity: 0;
           transition: opacity 0.3s;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
         .tooltip::after {
@@ -318,98 +331,137 @@ const MarketItems = ({ items }) => {
         /* Shopping Cart */
         .cart-container {
           flex: 1;
-          padding: 1rem;
-          background: #f8f9fa;
-          border-radius: 8px;
-          box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+          padding: 1.5rem;
+          background: #ffffff;
+          border-radius: 12px;
+          box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
           height: fit-content;
+          position: sticky;
+          top: 20px;
         }
 
         .cart-header {
           text-align: center;
-          margin-bottom: 1rem;
-          color: #333;
+          margin-bottom: 1.5rem;
+          color: #333333;
+          font-size: 1.5rem;
+          font-weight: 700;
+          border-bottom: 2px solid #e0e0e0;
+          padding-bottom: 0.5rem;
         }
 
         .empty-cart {
           text-align: center;
-          color: #777;
+          color: #888888;
+          font-size: 1rem;
+          font-weight: 500;
+          padding: 1rem 0;
         }
 
         .cart-items {
           display: flex;
           flex-direction: column;
-          gap: 1rem;
-          max-height: 400px;
+          gap: 1.2rem;
+          max-height: 450px;
           overflow-y: auto;
         }
 
         .cart-item {
           display: flex;
           align-items: center;
-          background: #fff;
-          padding: 0.5rem;
-          border-radius: 8px;
-          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+          background: #f9fafb;
+          padding: 0.8rem;
+          border-radius: 10px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
           position: relative;
+          transition: background 0.3s, transform 0.2s;
+        }
+
+        .cart-item:hover {
+          background: #f1f5f9;
+          transform: translateY(-2px);
         }
 
         .cart-item-image {
           width: 50px;
           height: 50px;
           object-fit: cover;
-          border-radius: 5px;
-          margin-right: 0.5rem;
+          border-radius: 8px;
+          margin-right: 1rem;
+          border: 1px solid #e0e0e0;
         }
 
         .cart-item-details {
           flex: 1;
           display: flex;
           flex-direction: column;
-          gap: 0.25rem;
+          gap: 0.3rem;
         }
 
-        .cart-item-level {
+        .cart-item-name {
           margin: 0;
-          color: #555;
+          color: #555555;
           font-size: 14px;
+          font-weight: 500;
         }
 
         .cart-item-quantity {
           margin: 0;
-          color: #555;
-          font-size: 14px;
+          color: #777777;
+          font-size: 13px;
         }
 
         .remove-button {
-          background: transparent;
+          background: #ff4d4f;
           border: none;
-          color: #ff4d4f;
-          font-size: 1.2rem;
+          color: white;
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          font-size: 1rem;
           cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background 0.3s, transform 0.2s;
+        }
+
+        .remove-button:hover {
+          background: #e04343;
+          transform: scale(1.1);
         }
 
         /* Cart Totals */
         .cart-totals {
-          margin-top: 2rem;
-          padding-top: 1rem;
-          border-top: 1px solid #ddd;
+          margin-top: 2.5rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid #e0e0e0;
           text-align: center;
         }
 
+        .cart-totals p {
+          margin: 0;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #333333;
+        }
+
         .clear-button {
-          margin-top: 1rem;
-          padding: 0.5rem 1rem;
+          margin-top: 1.2rem;
+          padding: 0.6rem 1.5rem;
           background: #ff4d4f;
-          color: #fff;
+          color: #ffffff;
           border: none;
-          border-radius: 5px;
+          border-radius: 30px;
           cursor: pointer;
-          transition: background 0.3s;
+          transition: background 0.3s, transform 0.2s;
+          font-size: 14px;
+          font-weight: 500;
         }
 
         .clear-button:hover {
           background: #e04343;
+          transform: translateY(-2px);
         }
 
         /* Responsive Design */
@@ -425,6 +477,7 @@ const MarketItems = ({ items }) => {
           .cart-container {
             width: 100%;
             margin-top: 2rem;
+            position: static;
           }
         }
       `}</style>
@@ -484,7 +537,7 @@ const MarketItems = ({ items }) => {
                   <p
                     className="price-text"
                     style={{
-                      color: isPriceZero ? 'red' : '#555',
+                      color: isPriceZero ? '#ff4d4f' : '#333333',
                       textDecoration: isPriceZero ? 'line-through' : 'none',
                     }}
                   >
@@ -495,10 +548,10 @@ const MarketItems = ({ items }) => {
                 {/* Tooltip */}
                 {hoveredItem === item.name && (
                   <div className="tooltip">
-                    <div style={{ marginBottom: '8px' }}>
+                    <div style={{ marginBottom: '8px', fontWeight: '500' }}>
                       <strong>Crafting Cost:</strong> ~${craftingCostLUA} USD
                     </div>
-                    <div>
+                    <div style={{ fontWeight: '500' }}>
                       <strong>Total:</strong> ~${craftingCostUSD} USD
                     </div>
                   </div>
@@ -524,8 +577,8 @@ const MarketItems = ({ items }) => {
                       className="cart-item-image"
                     />
                     <div className="cart-item-details">
-                      <p className="cart-item-level">Level: {item.level}</p>
-                      <p className="cart-item-quantity">x{item.quantity}</p>
+                      <p className="cart-item-name">{item.name}</p>
+                      <p className="cart-item-quantity">Level: {item.level} | Quantity: {item.quantity}</p>
                     </div>
                     <button
                       className="remove-button"
@@ -554,4 +607,3 @@ const MarketItems = ({ items }) => {
 };
 
 export default MarketItems;
-

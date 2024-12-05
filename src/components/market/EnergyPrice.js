@@ -1,3 +1,4 @@
+// src/components/energy/EnergyPrice.js
 import React, { useState, useEffect } from 'react';
 import { useSignalR } from './SignalRContext';
 
@@ -10,171 +11,10 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
   const [estimatedCostLUA, setEstimatedCostLUA] = useState(0);
   const [estimatedCostUSD, setEstimatedCostUSD] = useState(0);
 
+  // State for the filter
+  const [filter, setFilter] = useState('All');
+
   useEffect(() => {}, [tokenPrices]);
-
-  // Styles
-  const calculatorContainerStyle = {
-    marginBottom: '2rem',
-    textAlign: 'center',
-    padding: '1rem',
-    backgroundColor: '#f8f9fa',
-    borderRadius: '12px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-    maxWidth: '400px',
-    margin: '2rem auto',
-  };
-
-  const calculatorTitleStyle = {
-    marginBottom: '1rem',
-    fontSize: '1.5rem',
-    color: '#333',
-  };
-
-  const calculatorInputContainerStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: '1rem',
-  };
-
-  const calculatorLabelStyle = {
-    marginRight: '0.5rem',
-    fontSize: '1rem',
-    color: '#333',
-  };
-
-  const calculatorInputStyle = {
-    width: '80px',
-    padding: '0.5rem',
-    fontSize: '1rem',
-    borderRadius: '8px',
-    border: '1px solid #ced4da',
-    textAlign: 'center',
-  };
-
-  const calculatorResultStyle = {
-    fontSize: '1.1rem',
-    color: '#007bff',
-  };
-
-  const cardStyle = {
-    position: 'relative',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    border: '1px solid #ccc',
-    padding: '1rem',
-    borderRadius: '12px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-    margin: '10px',
-    width: '200px',
-    height: '220px',
-    backgroundColor: '#fff',
-    cursor: 'pointer',
-    transition: 'transform 0.2s',
-  };
-
-  const cardHoverStyle = {
-    transform: 'scale(1.05)',
-    boxShadow: '0 6px 18px rgba(0, 0, 0, 0.2)',
-  };
-
-  const imageStyle = {
-    width: '80px',
-    height: '80px',
-    borderRadius: '12px',
-    objectFit: 'cover',
-    marginBottom: '0.5rem',
-  };
-
-  const footerStyle = {
-    position: 'absolute',
-    bottom: '10px',
-    left: '0',
-    right: '0',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    fontSize: '14px',
-    fontWeight: 'bold',
-    color: '#333',
-    padding: '0 10px',
-  };
-
-  const priceStyle = {
-    display: 'flex',
-    alignItems: 'center',
-  };
-
-  const priceTextStyle = (isInvalid) => ({
-    textDecoration: isInvalid ? 'line-through' : 'none',
-    color: isInvalid ? '#d9534f' : '#333',
-  });
-
-  const epStyle = (isInvalid) => ({
-    color: isInvalid ? '#d9534f' : '#333',
-    fontWeight: isInvalid ? 'bold' : 'normal',
-    textDecoration: isInvalid ? 'line-through' : 'none',
-  });
-
-  const levelStyle = {
-    position: 'absolute',
-    top: '5px',
-    right: '5px',
-    backgroundColor: '#007bff',
-    color: 'white',
-    fontSize: '10px',
-    fontWeight: 'bold',
-    borderRadius: '4px',
-    padding: '4px 6px',
-  };
-
-  const craftingLabelStyle = {
-    position: 'absolute',
-    top: '5px',
-    left: '5px',
-    backgroundColor: '#28a745',
-    color: 'white',
-    fontSize: '10px',
-    fontWeight: 'bold',
-    borderRadius: '4px',
-    padding: '4px 6px',
-  };
-
-  const iconStyle = {
-    width: '16px',
-    height: '16px',
-    marginRight: '5px',
-  };
-
-  const tooltipStyle = {
-    visibility: 'visible',
-    backgroundColor: 'rgba(58, 58, 58, 0.95)',
-    color: '#fff',
-    textAlign: 'center',
-    borderRadius: '8px',
-    padding: '12px',
-    position: 'absolute',
-    zIndex: 1,
-    bottom: '100%',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    width: '240px',
-    opacity: 1,
-    transition: 'opacity 0.3s',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-  };
-
-  const tooltipArrowStyle = {
-    position: 'absolute',
-    top: '100%',
-    left: '50%',
-    marginLeft: '-6px',
-    borderWidth: '6px',
-    borderStyle: 'solid',
-    borderColor: 'rgba(58, 58, 58, 0.95) transparent transparent transparent',
-  };
 
   const applyMarketFee = (price) => {
     return price * 1.0425;
@@ -228,7 +68,7 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
     const cards = [
       {
         ...potion,
-        type: 'simple',
+        type: 'Potion',
         costPerEnergy: simpleCost.costPerEnergy,
         isInvalid: simpleCost.isInvalid,
         price: simpleCost.totalCost,
@@ -238,7 +78,7 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
     if (craftingCost) {
       cards.push({
         ...potion,
-        type: 'crafting',
+        type: 'Crafting',
         costPerEnergy: craftingCost.costPerEnergy,
         isInvalid: craftingCost.isInvalid,
         price: craftingCost.totalCost,
@@ -248,7 +88,14 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
     return cards;
   });
 
-  const sortedEnergy = allCards.sort((a, b) => a.costPerEnergy - b.costPerEnergy);
+  // Apply filter
+  const filteredEnergy = allCards.filter((card) => {
+    if (filter === 'All') return true;
+    return card.type === filter;
+  });
+
+  const sortedEnergy = filteredEnergy.sort((a, b) => a.costPerEnergy - b.costPerEnergy);
+
   const getTokenLogo = (tokenName) => {
     const token = tokenPrices.find(
       (t) => t.name.trim().toLowerCase() === tokenName.trim().toLowerCase()
@@ -290,13 +137,302 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
       setEstimatedCostUSD(0);
     }
   }, [energyAmount, minCostPerEnergy, lumiPrice]);
+
   return (
-    <div>
+    <div className="energy-price-container">
+      {/* Embedded Styles */}
+      <style>{`
+        .energy-price-container {
+          display: flex;
+          flex-direction: column;
+          padding: 2rem;
+          box-sizing: border-box;
+          position: relative;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          gap: 2rem;
+          background: #f5f7fa;
+          min-height: 100vh;
+        }
+
+        /* Filter Buttons */
+        .filters-container {
+          padding: 1rem;
+          background: #ffffff;
+          border-radius: 10px;
+          box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          justify-content: center;
+          max-width: 700px;
+          margin: 0 auto;
+        }
+
+        .filter-button {
+          padding: 0.6rem 1.8rem;
+          border: none;
+          border-radius: 30px;
+          background: #e0e7ff;
+          color: #4f46e5;
+          cursor: pointer;
+          transition: background 0.3s, color 0.3s, transform 0.2s;
+          font-size: 14px;
+          font-weight: 500;
+        }
+
+        .filter-button:hover {
+          background: #d4d9ff;
+          transform: translateY(-2px);
+        }
+
+        .filter-button.active {
+          background: #4f46e5;
+          color: white;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Energy Calculator */
+        .calculator-container {
+          margin-bottom: 2rem;
+          text-align: center;
+          padding: 1.5rem;
+          background-color: #ffffff;
+          border-radius: 12px;
+          box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+          max-width: 400px;
+          margin: 2rem auto;
+        }
+
+        .calculator-title {
+          margin-bottom: 1rem;
+          font-size: 1.5rem;
+          color: #333;
+          font-weight: 700;
+        }
+
+        .calculator-input-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 1rem;
+        }
+
+        .calculator-label {
+          margin-right: 0.5rem;
+          font-size: 1rem;
+          color: #333;
+          font-weight: 500;
+        }
+
+        .calculator-input {
+          width: 80px;
+          padding: 0.5rem;
+          font-size: 1rem;
+          border-radius: 8px;
+          border: 1px solid #ced4da;
+          text-align: center;
+        }
+
+        .calculator-result {
+          font-size: 1.1rem;
+          color: #007bff;
+          font-weight: 600;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+          justify-content: center;
+        }
+
+        /* Energy Card */
+        .energy-card {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-between;
+          border: none;
+          padding: 1.5rem;
+          border-radius: 12px;
+          background: #ffffff;
+          box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.1);
+          width: 200px;
+          height: 220px;
+          cursor: pointer;
+          transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .energy-card:hover {
+          transform: translateY(-5px) scale(1.02);
+          box-shadow: 0px 8px 22px rgba(0, 0, 0, 0.2);
+        }
+
+        .level-label {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background: #ff7f50;
+          color: white;
+          padding: 5px 10px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          z-index: 2;
+        }
+
+        .crafting-label {
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          background: #28a745;
+          color: white;
+          font-size: 10px;
+          font-weight: bold;
+          border-radius: 4px;
+          padding: 4px 6px;
+          z-index: 2;
+        }
+
+        .energy-image {
+          width: 80px;
+          height: 80px;
+          border-radius: 12px;
+          object-fit: cover;
+          margin-bottom: 0.5rem;
+          display: block;
+        }
+
+        .energy-footer {
+          position: absolute;
+          bottom: 10px;
+          left: 10px;
+          right: 10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 14px;
+          font-weight: bold;
+          color: #333;
+          padding: 0 10px;
+        }
+
+        .price-section {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        }
+
+        .price-text {
+          margin: 0;
+          font-size: 14px;
+          font-weight: 600;
+          color: #333333;
+        }
+
+        .price-text.invalid {
+          text-decoration: line-through;
+          color: #d9534f;
+        }
+
+        .ep-section {
+          color: #333333;
+          font-weight: normal;
+          text-decoration: none;
+        }
+
+        .ep-section.invalid {
+          color: #d9534f;
+          font-weight: bold;
+          text-decoration: line-through;
+        }
+
+        /* Tooltip */
+        .tooltip {
+          visibility: hidden;
+          background-color: rgba(58, 58, 58, 0.95);
+          color: #fff;
+          text-align: left;
+          border-radius: 8px;
+          padding: 12px;
+          position: absolute;
+          z-index: 3;
+          bottom: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 240px;
+          opacity: 0;
+          transition: opacity 0.3s;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .tooltip::after {
+          content: "";
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          margin-left: -6px;
+          border-width: 6px;
+          border-style: solid;
+          border-color: rgba(58, 58, 58, 0.95) transparent transparent transparent;
+        }
+
+        .energy-card:hover .tooltip {
+          visibility: visible;
+          opacity: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+          .energy-price-container {
+            padding: 1rem;
+          }
+
+          .calculator-container {
+            max-width: 100%;
+          }
+
+          .energy-card {
+            width: 100%;
+            height: auto;
+          }
+
+          .cards-grid {
+            flex-direction: column;
+            align-items: center;
+          }
+        }
+      `}</style>
+
+      {/* Filters */}
+      <div className="filters-container">
+        <button
+          className={`filter-button ${filter === 'All' ? 'active' : ''}`}
+          onClick={() => setFilter('All')}
+        >
+          All
+        </button>
+        <button
+          className={`filter-button ${filter === 'Crafting' ? 'active' : ''}`}
+          onClick={() => setFilter('Crafting')}
+        >
+          Crafting
+        </button>
+        <button
+          className={`filter-button ${filter === 'Potion' ? 'active' : ''}`}
+          onClick={() => setFilter('Potion')}
+        >
+          Potions
+        </button>
+      </div>
+
       {/* Energy Calculator */}
-      <div style={calculatorContainerStyle}>
-        <h3 style={calculatorTitleStyle}>Energy Calculator</h3>
-        <div style={calculatorInputContainerStyle}>
-          <label htmlFor="energyAmount" style={calculatorLabelStyle}>
+      <div className="calculator-container">
+        <h3 className="calculator-title">Energy Calculator</h3>
+        <div className="calculator-input-container">
+          <label htmlFor="energyAmount" className="calculator-label">
             Amount of Energy:
           </label>
           <input
@@ -305,35 +441,28 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
             value={energyAmount}
             min="1"
             onChange={(e) => setEnergyAmount(parseInt(e.target.value) || 1)}
-            style={calculatorInputStyle}
+            className="calculator-input"
           />
         </div>
         {estimatedCostLUA > 0 && (
-          <div style={calculatorResultStyle}>
+          <div className="calculator-result">
             Estimated Cost: {estimatedCostLUA} LUA (~${estimatedCostUSD} USD)
           </div>
         )}
       </div>
 
       {/* List of Cards */}
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '1rem',
-          justifyContent: 'center',
-        }}
-      >
+      <div className="cards-grid">
         {sortedEnergy.map((card, index) => {
           const levelMatch = card.name.match(/Lv\s?\d+/i);
           const level = levelMatch ? levelMatch[0].toUpperCase() : null;
 
           let imageUrl = '';
-          if (card.type === 'simple') {
+          if (card.type === 'Potion') {
             imageUrl =
               card.url ||
               'https://cdn.skymavis.com/mm-cache/7/1/a982febb7e3f7e75d9ff811d644971.png';
-          } else if (card.type === 'crafting') {
+          } else if (card.type === 'Crafting') {
             if (
               card.crafting.some(
                 (craft) => craft.element.trim().toLowerCase() === 'empty bottle'
@@ -351,39 +480,44 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
           return (
             <div
               key={index}
-              style={{
-                ...cardStyle,
-                ...(hoveredCard === index ? cardHoverStyle : {}),
-              }}
+              className="energy-card"
               onMouseEnter={() => setHoveredCard(index)}
               onMouseLeave={() => setHoveredCard(null)}
             >
-              {level && <div style={levelStyle}>{level}</div>}
+              {level && <div className="level-label">{level}</div>}
 
-              {card.type === 'crafting' && (
-                <div style={craftingLabelStyle}>Crafting</div>
+              {card.type === 'Crafting' && (
+                <div className="crafting-label">Crafting</div>
               )}
 
-              <img src={imageUrl} alt={card.name} style={imageStyle} />
+              <img src={imageUrl} alt={card.name} className="energy-image" />
 
-              <div style={footerStyle}>
-                <div style={priceStyle}>
+              <div className="energy-footer">
+                <div className="price-section">
                   <img
                     src="https://cdn.skymavis.com/ronin/2020/erc20/0xd61bbbb8369c46c15868ad9263a2710aced156c4/logo-transparent.png"
                     alt="Cost Icon"
-                    style={iconStyle}
+                    style={{ width: '16px', height: '16px', marginRight: '5px' }}
                   />
-                  <span style={priceTextStyle(card.isInvalid)}>
+                  <span
+                    className={`price-text ${
+                      card.isInvalid ? 'invalid' : ''
+                    }`}
+                  >
                     {parseFloat(card.price).toFixed(4)}
                   </span>
                 </div>
-                <div style={epStyle(card.isInvalid)}>
+                <div
+                  className={`ep-section ${
+                    card.isInvalid ? 'invalid' : ''
+                  }`}
+                >
                   {`E/$: ${card.costPerEnergy.toFixed(4)}`}
                 </div>
               </div>
 
               {hoveredCard === index && (
-                <div style={tooltipStyle}>
+                <div className="tooltip">
                   <div style={{ marginBottom: '8px' }}>
                     <strong>Total:</strong> (~$
                     {convertToUSD(card.price)} USD)
@@ -392,7 +526,6 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
                     <strong>E/$:</strong> (~$
                     {convertToUSD(card.costPerEnergy)} USD)
                   </div>
-                  <div style={tooltipArrowStyle}></div>
                 </div>
               )}
             </div>
@@ -404,5 +537,3 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
 };
 
 export default EnergyPrice;
-
-

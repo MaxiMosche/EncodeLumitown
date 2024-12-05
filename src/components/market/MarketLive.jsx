@@ -125,6 +125,7 @@ const MarketLive = () => {
     statusText: {
       fontSize: '1em',
       color: '#333333',
+      fontWeight: 'bold', // Añadido para negrita
     },
     disconnectedStatusDot: {
       backgroundColor: '#ff4d4f', // Rojo
