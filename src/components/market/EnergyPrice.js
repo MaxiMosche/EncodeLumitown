@@ -6,12 +6,12 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
   const { marketData, tokenPrices, isConnected } = useSignalR();
   const [hoveredCard, setHoveredCard] = useState(null);
 
-  // Estado para la calculadora
+  // State for the calculator
   const [energyAmount, setEnergyAmount] = useState(1);
   const [estimatedCostLUA, setEstimatedCostLUA] = useState(0);
   const [estimatedCostUSD, setEstimatedCostUSD] = useState(0);
 
-  // Estado para el filtro
+  // State for the filter
   const [filter, setFilter] = useState('All');
 
   useEffect(() => {}, [tokenPrices]);
@@ -88,7 +88,7 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
     return cards;
   });
 
-  // Aplicar filtro
+  // Apply filter
   const filteredEnergy = allCards.filter((card) => {
     if (filter === 'All') return true;
     return card.type === filter;
@@ -122,10 +122,11 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
     return (price * lumiPrice).toFixed(4);
   };
 
-  // Obtener el mínimo E/P
+  // Get the minimum E/P
   const minCostPerEnergy =
     sortedEnergy.length > 0 ? sortedEnergy[0].costPerEnergy : 0;
-  // Efecto para actualizar el costo estimado
+  
+  // Effect to update the estimated cost
   useEffect(() => {
     if (minCostPerEnergy > 0 && energyAmount > 0) {
       const totalCostLUA = energyAmount * minCostPerEnergy;
@@ -140,7 +141,7 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
 
   return (
     <div className="energy-price-container">
-      {/* Estilos Embebidos */}
+      {/* Embedded Styles */}
       <style>{`
         .energy-price-container {
           display: flex;
@@ -154,7 +155,7 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
           min-height: 100vh;
         }
 
-        /* Botones de Filtro */
+        /* Filter Buttons */
         .filters-container {
           padding: 1rem;
           background: #ffffff;
@@ -191,7 +192,7 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
           box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
-        /* Calculadora de Energía */
+        /* Energy Calculator */
         .calculator-container {
           margin-bottom: 2rem;
           text-align: center;
@@ -239,7 +240,7 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
           font-weight: 600;
         }
 
-        /* Grid de Tarjetas */
+        /* Cards Grid */
         .cards-grid {
           display: flex;
           flex-wrap: wrap;
@@ -247,13 +248,13 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
           justify-content: center;
         }
 
-        /* Tarjeta de Energía */
+        /* Energy Card */
         .energy-card {
           position: relative;
           display: flex;
           flex-direction: column;
           align-items: center;
-          justify-content: center; /* Cambiado de space-between a center */
+          justify-content: center; /* Changed from space-between to center */
           border: none;
           padding: 1.5rem;
           border-radius: 12px;
@@ -296,13 +297,13 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
           z-index: 2;
         }
 
-        /* Contenedor de la Imagen */
+        /* Image Container */
         .image-container {
           display: flex;
           justify-content: center;
           align-items: center;
-          flex-grow: 1; /* Permite que el contenedor tome el espacio disponible */
-          margin-bottom: 1rem; /* Ajusta según sea necesario */
+          flex-grow: 1; /* Allows the container to take available space */
+          margin-bottom: 1rem; /* Adjust as needed */
         }
 
         .energy-image {
@@ -392,7 +393,7 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
           opacity: 1;
         }
 
-        /* Diseño Responsivo */
+        /* Responsive Design */
         @media (max-width: 768px) {
           .energy-price-container {
             padding: 1rem;
@@ -414,13 +415,13 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
         }
       `}</style>
 
-      {/* Filtros */}
+      {/* Filters */}
       <div className="filters-container">
         <button
           className={`filter-button ${filter === 'All' ? 'active' : ''}`}
           onClick={() => setFilter('All')}
         >
-          Todos
+          All
         </button>
         <button
           className={`filter-button ${filter === 'Crafting' ? 'active' : ''}`}
@@ -432,16 +433,16 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
           className={`filter-button ${filter === 'Potion' ? 'active' : ''}`}
           onClick={() => setFilter('Potion')}
         >
-          Pociones
+          Potions
         </button>
       </div>
 
-      {/* Calculadora de Energía */}
+      {/* Energy Calculator */}
       <div className="calculator-container">
-        <h3 className="calculator-title">Calculadora de Energía</h3>
+        <h3 className="calculator-title">Energy Calculator</h3>
         <div className="calculator-input-container">
           <label htmlFor="energyAmount" className="calculator-label">
-            Cantidad de Energía:
+            Energy Amount:
           </label>
           <input
             type="number"
@@ -454,12 +455,12 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
         </div>
         {estimatedCostLUA > 0 && (
           <div className="calculator-result">
-            Costo Estimado: {estimatedCostLUA} LUA (~${estimatedCostUSD} USD)
+            Estimated Cost: {estimatedCostLUA} LUA (~${estimatedCostUSD} USD)
           </div>
         )}
       </div>
 
-      {/* Lista de Tarjetas */}
+      {/* Cards List */}
       <div className="cards-grid">
         {sortedEnergy.map((card, index) => {
           const levelMatch = card.name.match(/Lv\s?\d+/i);
@@ -498,7 +499,7 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
                 <div className="crafting-label">Crafting</div>
               )}
 
-              {/* Contenedor de la Imagen */}
+              {/* Image Container */}
               <div className="image-container">
                 <img src={imageUrl} alt={card.name} className="energy-image" />
               </div>
