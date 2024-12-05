@@ -555,5 +555,3 @@ const MarketItems = ({ items }) => {
 
 export default MarketItems;
 
-
-

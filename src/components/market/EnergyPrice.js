@@ -211,7 +211,6 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
 
     const multiplier = name && name.toLowerCase().includes('lv 1') ? 3.5 : 4;
     const energyAdjusted = validEnergy * multiplier;
-
     const finalPrice = applyMarketFee(craftingTotal + validFee);
     return {
       totalCost: finalPrice,
@@ -250,7 +249,6 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
   });
 
   const sortedEnergy = allCards.sort((a, b) => a.costPerEnergy - b.costPerEnergy);
-
   const getTokenLogo = (tokenName) => {
     const token = tokenPrices.find(
       (t) => t.name.trim().toLowerCase() === tokenName.trim().toLowerCase()
@@ -273,7 +271,6 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
     (t) => t.name.trim().toLowerCase() === 'lumi finance token'
   );
   const lumiPrice = lumiToken ? parseFloat(lumiToken.price) : 1;
-
   const convertToUSD = (price) => {
     return (price * lumiPrice).toFixed(4);
   };
@@ -281,13 +278,11 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
   // Get the minimum E/P
   const minCostPerEnergy =
     sortedEnergy.length > 0 ? sortedEnergy[0].costPerEnergy : 0;
-
   // Effect to update the estimated cost
   useEffect(() => {
     if (minCostPerEnergy > 0 && energyAmount > 0) {
       const totalCostLUA = energyAmount * minCostPerEnergy;
       const totalCostUSD = totalCostLUA * lumiPrice;
-
       setEstimatedCostLUA(totalCostLUA.toFixed(4));
       setEstimatedCostUSD(totalCostUSD.toFixed(4));
     } else {
@@ -295,7 +290,6 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
       setEstimatedCostUSD(0);
     }
   }, [energyAmount, minCostPerEnergy, lumiPrice]);
-
   return (
     <div>
       {/* Energy Calculator */}
@@ -392,11 +386,11 @@ const EnergyPrice = ({ marketFeePercentage = 425 }) => {
                 <div style={tooltipStyle}>
                   <div style={{ marginBottom: '8px' }}>
                     <strong>Total:</strong> (~$
-                    {applyMarketFee(convertToUSD(card.price)).toFixed(4)} USD)
+                    {convertToUSD(card.price)} USD)
                   </div>
                   <div>
                     <strong>E/$:</strong> (~$
-                    {applyMarketFee(convertToUSD(card.costPerEnergy)).toFixed(4)} USD)
+                    {convertToUSD(card.costPerEnergy)} USD)
                   </div>
                   <div style={tooltipArrowStyle}></div>
                 </div>

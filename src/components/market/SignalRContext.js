@@ -311,11 +311,9 @@ export const SignalRProvider = ({ children }) => {
         const convertToUSD = (price) => {
           return (price * lumiPrice).toFixed(4);
         };
-
+        console.log('price lua' , lumiPrice)
         // Convertir el costo por energía a USD
         const epValueUSD = convertToUSD(lowestEP.costPerEnergy);
-        console.log('price lumi ', lumiPrice);
-        console.log('Calculated E/P Value in USD:', epValueUSD);
         setEpValue(epValueUSD);
       } else {
         // Si no hay cards válidas, establecer epValue en null
