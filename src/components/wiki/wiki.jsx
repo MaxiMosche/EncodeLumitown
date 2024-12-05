@@ -110,7 +110,7 @@ const Wiki = () => {
         return (
             <div style={styles.loadingContainer}>
                 <div style={styles.spinner}></div>
-                <p>Loading recipes...</p>
+                <p style={styles.loadingText}>Loading recipes...</p>
             </div>
         );
     }
@@ -125,37 +125,37 @@ const Wiki = () => {
 
     const handleFilterChange = (newFilter) => {
         setFilter(newFilter);
-        setSelectedRecipe(null);  // Cierra el detalle de la receta al cambiar el filtro
+        setSelectedRecipe(null);  // Close the recipe details when changing the filter
         navigate(`?filter=${newFilter}`); 
     };
 
     const handleGoBack = () => {
-        navigate("/homewiki"); // Navegar hacia la página anterior
+        navigate("/homewiki"); // Navigate back to the previous page
     };
 
     return (
         <div style={styles.wikiContainer}>
             <div style={styles.fog}></div>
 
-            {/* Botón de retroceso */}
+            {/* Back Button */}
             <button
-    onClick={handleGoBack}
-    style={{
-        ...styles.goBackButton,
-    }}
-    onMouseOver={(e) => {
-        e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.6)';
-        e.target.style.color = 'white';
-        e.target.style.transform = 'scale(1.1)';
-    }}
-    onMouseOut={(e) => {
-        e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.4)';
-        e.target.style.color = 'white';
-        e.target.style.transform = 'scale(1)';
-    }}
->
-    &lt; {/* El signo de menor directamente */}
-</button>
+                onClick={handleGoBack}
+                style={{
+                    ...styles.goBackButton,
+                }}
+                onMouseOver={(e) => {
+                    e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.6)';
+                    e.target.style.color = 'white';
+                    e.target.style.transform = 'scale(1.1)';
+                }}
+                onMouseOut={(e) => {
+                    e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.4)';
+                    e.target.style.color = 'white';
+                    e.target.style.transform = 'scale(1)';
+                }}
+            >
+                &lt; {/* The less-than sign directly */}
+            </button>
 
             <div style={styles.filterContainer}>
                 <img 
@@ -243,23 +243,43 @@ const styles = {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
+        height: '100vh', // Reduced height from 100vh to 80vh
+        background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)', // Gradient background
+        color: '#fff',
+        fontFamily: 'Arial, sans-serif',
+        width: '100%',
+        zIndex: 9999, // Ensure the loading screen is above other elements
     },
     spinner: {
-        border: '8px solid #f3f3f3',
-        borderTop: '8px solid #3498db',
+        width: '50px', // Reduced size from 80px
+        height: '50px',
+        border: '8px solid rgba(255, 255, 255, 0.3)', // Adjusted border thickness
+        borderTop: '8px solid #fff',
         borderRadius: '50%',
-        width: '60px',
-        height: '60px',
         animation: 'spin 1s linear infinite',
+    },
+    loadingText: {
+        marginTop: '10px', // Reduced margin
+        fontSize: '16px', // Reduced font size from 24px
+        fontWeight: 'bold',
+        textAlign: 'center',
+        animation: 'fadeIn 2s ease-in-out',
+    },
+    '@keyframes spin': {
+        '0%': { transform: 'rotate(0deg)' },
+        '100%': { transform: 'rotate(360deg)' },
+    },
+    '@keyframes fadeIn': {
+        '0%': { opacity: 0 },
+        '100%': { opacity: 1 },
     },
     filterContainer: {
         display: 'flex',
-        justifyContent: 'flex-start', // Cambiado de 'space-around' a 'flex-start'
+        justifyContent: 'flex-start', // Changed from 'space-around' to 'flex-start'
         marginLeft: '150px',
         marginBottom: '10px',
         zIndex: 2,
-        gap: '150px' // Esto agrega un espacio fijo entre los botones
+        gap: '150px' // Fixed space between buttons
     },
     filterImage: {
         width: '200px',
@@ -333,9 +353,9 @@ const styles = {
         objectFit: 'contain',
     },
     goBackButton: {
-        position: 'relative', // Asegura que el botón esté fijado en la pantalla
-        top: '5px', // Fija el botón a 10px desde la parte superior
-        left: '60px', // Fija el botón a 10px desde la izquierda
+        position: 'relative', // Ensure the button is fixed on the screen
+        top: '5px', // Position 5px from the top
+        left: '60px', // Position 60px from the left
         width: '60px',
         height: '60px',
         marginBottom: '15px',
@@ -348,6 +368,29 @@ const styles = {
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.6)',
         transition: 'background-color 0.3s ease, transform 0.3s ease',
     },
+    '@keyframes spin': {
+        '0%': { transform: 'rotate(0deg)' },
+        '100%': { transform: 'rotate(360deg)' },
+    },
+    '@keyframes fadeIn': {
+        '0%': { opacity: 0 },
+        '100%': { opacity: 1 },
+    },
 };
+
+// Add CSS animations to the document
+const styleSheet = document.styleSheets[0];
+const keyframesSpin = `
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}`;
+const keyframesFadeIn = `
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}`;
+styleSheet.insertRule(keyframesSpin, styleSheet.cssRules.length);
+styleSheet.insertRule(keyframesFadeIn, styleSheet.cssRules.length);
 
 export default Wiki;
