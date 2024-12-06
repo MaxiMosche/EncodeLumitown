@@ -1,5 +1,5 @@
 // src/components/market/MarketItems.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSignalR } from './SignalRContext'; // Ensure this context is correctly set up
 
 const MarketItems = ({ items }) => {
@@ -18,7 +18,7 @@ const MarketItems = ({ items }) => {
     gathering: 'gather essence',
   };
 
-  // Filter items based on selected filter
+  // Filter items based on the selected filter
   const filteredItems = items.filter((item) => {
     if (filter === '') return true;
     return Object.keys(essenceFilters).some(
@@ -63,6 +63,12 @@ const MarketItems = ({ items }) => {
   );
   const luaPrice = luaToken ? parseFloat(luaToken.price) : 0;
 
+  // Currency Formatter
+  const formatterUSD = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+
   // Helper function to extract item level from its name
   const getItemLevel = (itemName) => {
     const levelMatch = itemName.match(/lv\s*(\d+)/i);
@@ -70,8 +76,17 @@ const MarketItems = ({ items }) => {
   };
 
   // Handle adding items to the cart
-  const handleAddToCart = (item, craftingCostUSD) => {
+  const handleAddToCart = (item) => {
     const level = getItemLevel(item.name);
+    const isSlime = item.name.toLowerCase().includes('slime');
+
+    // Calculate crafting cost in LUA and USD
+    const craftingCostLUA = parseFloat(energyCosts(isSlime)[level]) || 0;
+    const craftingCostUSD = luaPrice > 0 ? craftingCostLUA * luaPrice : 0;
+
+    // Calculate market cost in USD
+    const marketCostUSD = luaPrice > 0 ? parseFloat(item.price) * luaPrice : 0;
+
     setCartItems((prev) => {
       const existingItemIndex = prev.findIndex(
         (cartItem) => cartItem.name === item.name && cartItem.level === level
@@ -84,7 +99,16 @@ const MarketItems = ({ items }) => {
         return updatedCart;
       } else {
         // If item doesn't exist, add it to the cart with quantity 1
-        return [...prev, { ...item, craftingCostUSD, quantity: 1, level }];
+        return [
+          ...prev,
+          {
+            ...item,
+            craftingCostUSD,
+            marketCostUSD,
+            quantity: 1,
+            level,
+          },
+        ];
       }
     });
 
@@ -125,14 +149,17 @@ const MarketItems = ({ items }) => {
   };
 
   // Calculate totals
-  const totalPurchase = cartItems.reduce(
-    (total, item) => total + parseFloat(item.price || 0) * item.quantity,
-    0
-  );
   const totalCrafting = cartItems.reduce(
-    (total, item) => total + parseFloat(item.craftingCostUSD || 0) * item.quantity,
+    (total, item) => total + (item.craftingCostUSD || 0) * item.quantity,
     0
   );
+
+  const totalMarket = cartItems.reduce(
+    (total, item) => total + (item.marketCostUSD || 0) * item.quantity,
+    0
+  );
+
+  const totalCart = totalCrafting + totalMarket;
 
   // Sort cart items by quantity in descending order
   const sortedCartItems = [...cartItems].sort((a, b) => b.quantity - a.quantity);
@@ -440,10 +467,14 @@ const MarketItems = ({ items }) => {
         }
 
         .cart-totals p {
-          margin: 0;
+          margin: 0.5rem 0;
           font-size: 1.2rem;
           font-weight: 600;
           color: #333333;
+        }
+
+        .cart-totals p strong {
+          color: #4f46e5; /* Primary color to highlight totals */
         }
 
         .clear-button {
@@ -515,14 +546,18 @@ const MarketItems = ({ items }) => {
             const isPriceZero = originalPrice === 0;
             const increasedPrice = originalPrice * 1.0425;
             const isSlime = item.name.toLowerCase().includes('slime');
-            const craftingCostLUA = energyCosts(isSlime)[level] || '0.00';
-            const craftingCostUSD = luaPrice > 0 ? (craftingCostLUA * luaPrice).toFixed(2) : '0.00';
+
+            // Calculate costs
+            const craftingCostLUA = parseFloat(energyCosts(isSlime)[level]) || 0;
+            const craftingCostUSD = luaPrice > 0 ? craftingCostLUA * luaPrice : 0;
+            const marketCostUSD = luaPrice > 0 ? originalPrice * luaPrice : 0;
+            // const totalUSD = craftingCostUSD + marketCostUSD; // Removed from tooltip
 
             return (
               <div
                 key={`${item.name}-${level}-${index}`}
                 className="item-card"
-                onClick={() => handleAddToCart(item, craftingCostUSD)}
+                onClick={() => handleAddToCart(item)}
                 onMouseEnter={() => setHoveredItem(item.name)}
                 onMouseLeave={() => setHoveredItem(null)}
               >
@@ -549,10 +584,10 @@ const MarketItems = ({ items }) => {
                 {hoveredItem === item.name && (
                   <div className="tooltip">
                     <div style={{ marginBottom: '8px', fontWeight: '500' }}>
-                      <strong>Crafting Cost:</strong> ~${craftingCostLUA} USD
+                      <strong>Crafting Cost:</strong>~{formatterUSD.format(craftingCostUSD)} USD
                     </div>
                     <div style={{ fontWeight: '500' }}>
-                      <strong>Total:</strong> ~${craftingCostUSD} USD
+                      <strong>Market Cost:</strong> ~{formatterUSD.format(marketCostUSD)} USD
                     </div>
                   </div>
                 )}
@@ -592,7 +627,10 @@ const MarketItems = ({ items }) => {
               </div>
               <div className="cart-totals">
                 <p>
-                  <strong>Total:</strong> ${totalCrafting.toFixed(2)}
+                  <strong>Total Crafting:</strong> {formatterUSD.format(totalCrafting)}
+                </p>
+                <p>
+                  <strong>Total Market:</strong> {formatterUSD.format(totalMarket)}
                 </p>
                 <button className="clear-button" onClick={handleClearCart}>
                   Clear Cart
